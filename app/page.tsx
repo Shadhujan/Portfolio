@@ -276,9 +276,19 @@ export default function HomePage() {
                       href={project.url}
                       target="_blank"
                       rel="noreferrer"
+                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative mr-4"
+                    >
+                      View Code
+                    </a>
+                  )}
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
                       className="text-xs text-emerald-400 hover:text-emerald-300 underline relative"
                     >
-                      View code / live demo
+                      Live Demo
                     </a>
                   )}
                 </motion.div>
@@ -390,6 +400,26 @@ export default function HomePage() {
                   className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
                 >
                   LinkedIn
+                </a>
+              )}
+              {aboutData.medium && (
+                <a
+                  href={aboutData.medium}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
+                >
+                  Medium
+                </a>
+              )}
+              {aboutData.website && (
+                <a
+                  href={aboutData.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
+                >
+                  Website
                 </a>
               )}
             </div>

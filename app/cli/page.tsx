@@ -124,6 +124,12 @@ export default function CLIPortfolioPage() {
         if (aboutData.linkedin) {
           output.push(`LinkedIn: ${aboutData.linkedin}`);
         }
+        if (aboutData.medium) {
+          output.push(`Medium: ${aboutData.medium}`);
+        }
+        if (aboutData.website) {
+          output.push(`Website: ${aboutData.website}`);
+        }
         if (aboutData.email) {
           output.push(`Email: ${aboutData.email}`);
         }
@@ -157,7 +163,8 @@ export default function CLIPortfolioPage() {
                 "",
                 proj.description,
                 "",
-                proj.url ? `Repo/Live: ${proj.url}` : "",
+                proj.url ? `Repo: ${proj.url}` : "",
+                proj.liveUrl ? `Live: ${proj.liveUrl}` : "",
               ].filter(Boolean);
             }
           }
