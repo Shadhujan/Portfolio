@@ -197,6 +197,9 @@ export default function CLIPortfolioPage() {
           "Backend:",
           "  - " + skillsData.backend.join("\n  - "),
           "",
+          "Cloud:",
+          "  - " + skillsData.cloud.join("\n  - "),
+          "",
           "Tools:",
           "  - " + skillsData.tools.join("\n  - "),
         ];
