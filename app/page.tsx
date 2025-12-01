@@ -6,14 +6,8 @@ import {
   aboutData,
   projectsData,
   skillsData,
-  skillIconMap,
 } from "@/lib/portfolioData";
 import SkillBubbles from "./components/SkillBubbles";
-
-interface MorphSkill {
-  label: string;
-  iconClass?: string;
-}
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
@@ -234,57 +228,31 @@ export default function HomePage() {
         {/* Skills with bubbles */}
         <section id="skills" className="border-b border-slate-900">
           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
               <div>
-                <h2 className="text-xl font-semibold mb-3">Skills</h2>
+                <h2 className="text-xl font-semibold mb-3">Skill Ecosystem</h2>
                 <p className="text-sm text-slate-300 max-w-xl">
-                  My main stack is C# / .NET on the backend with React and Next.js
-                  on the frontend, plus strong experience in SQL and cloud tools.
+                  A comprehensive view of my technical stack, centered around .NET
+                  and modern web technologies.
                 </p>
               </div>
               <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em]">
-                Hover the bubbles
+                Interactive Cloud
               </p>
             </div>
 
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
-                  Languages
-                </h3>
-                <SkillBubbles skills={skillsData.languages} />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
-                  Backend
-                </h3>
-                <SkillBubbles skills={skillsData.backend} />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
-                  Frontend
-                </h3>
-                <SkillBubbles skills={skillsData.frontend} />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
-                  Databases
-                </h3>
-                <SkillBubbles skills={skillsData.databases} />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
-                  DevOps & Tools
-                </h3>
-                <SkillBubbles
-                  skills={[...skillsData.devops, ...skillsData.tools]}
-                />
-              </div>
-            </div>
+            <SkillBubbles
+              skills={Array.from(
+                new Set([
+                  ...skillsData.languages,
+                  ...skillsData.backend,
+                  ...skillsData.frontend,
+                  ...skillsData.databases,
+                  ...skillsData.devops,
+                  ...skillsData.tools,
+                ])
+              )}
+            />
           </div>
         </section>
 

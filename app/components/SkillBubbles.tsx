@@ -14,13 +14,18 @@ export default function SkillBubbles({ skills }: SkillBubblesProps) {
   return (
     <motion.div
       layout
-      className="relative mx-auto max-w-xl grid grid-cols-4 sm:grid-cols-5 gap-4 sm:gap-5 justify-items-center py-4"
+      className="relative mx-auto max-w-3xl flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-10 px-4"
     >
       {skills.map((skill, index) => {
-        // Use the skill name as ID for simplicity
         const id = skill;
         const isHovered = hoveredId === id;
-        const iconClass = skillIconMap[skill] || "devicon-devicon-plain"; // Fallback icon
+        const isAnyHovered = hoveredId !== null;
+
+        // Get icon class and append 'colored' if it's a devicon class
+        let iconClass = skillIconMap[skill] || "devicon-devicon-plain";
+        if (iconClass.startsWith("devicon-")) {
+          iconClass += " colored";
+        }
 
         return (
           <motion.button
@@ -29,34 +34,51 @@ export default function SkillBubbles({ skills }: SkillBubblesProps) {
             layout
             onMouseEnter={() => setHoveredId(id)}
             onMouseLeave={() => setHoveredId(null)}
-            className="relative flex items-center justify-center rounded-full bg-slate-900 border border-slate-800 shadow-[0_8px_30px_rgba(0,0,0,0.45)] aspect-square w-14 sm:w-16 md:w-20 overflow-hidden"
-            whileHover={{ scale: 1.4, zIndex: 10 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            className={`relative flex items-center justify-center rounded-full bg-slate-50 border border-slate-200 shadow-lg overflow-hidden transition-shadow duration-300 ${
+              isHovered ? "shadow-2xl z-20" : "z-10"
+            }`}
+            // Animate width/height for layout shift
+            animate={{
+              width: isHovered ? 140 : 80, // Expanded vs Normal width
+              height: isHovered ? 140 : 80, // Expanded vs Normal height
+              opacity: isAnyHovered && !isHovered ? 0.6 : 1, // Dim others
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+            }}
           >
-            {/* subtle floating animation */}
+            {/* Floating animation (only when not hovered to avoid jitter) */}
             <motion.div
-              className="flex flex-col items-center justify-center"
-              animate={{
-                y: [0, -2, 0],
-              }}
+              className="flex flex-col items-center justify-center pointer-events-none"
+              animate={
+                isHovered
+                  ? {}
+                  : {
+                      y: [0, -3, 0],
+                    }
+              }
               transition={{
-                duration: 3,
+                duration: 3 + (index % 3), // Deterministic duration based on index
                 repeat: Infinity,
                 repeatType: "mirror",
-                delay: index * 0.15,
+                delay: index * 0.1,
               }}
             >
               <i
-                className={`${iconClass} text-2xl sm:text-3xl md:text-4xl`}
+                className={`${iconClass} transition-all duration-300 ${
+                  isHovered ? "text-6xl" : "text-4xl"
+                }`}
               />
             </motion.div>
 
-            {/* label bubble appears only when hovered */}
+            {/* Label tooltip - visible only on hover */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-              transition={{ duration: 0.18 }}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-slate-950/95 px-3 py-1 text-[10px] text-slate-50 border border-slate-700 shadow-lg pointer-events-none whitespace-nowrap z-20"
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] font-medium text-slate-50 shadow-sm pointer-events-none whitespace-nowrap"
             >
               {skill}
             </motion.div>
