@@ -8,80 +8,14 @@ import {
   skillsData,
   skillIconMap,
 } from "@/lib/portfolioData";
-import { useEffect, useState } from "react";
+import SkillBubbles from "./components/SkillBubbles";
 
 interface MorphSkill {
   label: string;
   iconClass?: string;
 }
 
-// build a flat list of important skills for morph blob
-const morphSkills: MorphSkill[] = [
-  { label: "C#", iconClass: skillIconMap["C#"] },
-  { label: ".NET", iconClass: skillIconMap[".NET"] },
-  { label: "ASP.NET Core", iconClass: skillIconMap["ASP.NET Core"] },
-  { label: "SQL Server", iconClass: skillIconMap["SQL Server"] },
-  { label: "Azure", iconClass: skillIconMap["Azure"] },
-  { label: "React", iconClass: skillIconMap["React"] },
-  { label: "Next.js", iconClass: skillIconMap["Next.js"] },
-];
-
-const blobKeyframes = [
-  "40% 60% 60% 40%",
-  "60% 40% 65% 35%",
-  "55% 45% 35% 65%",
-  "45% 55% 60% 40%",
-  "40% 60% 60% 40%",
-];
-
-function SkillMorphBlob() {
-  const [index, setIndex] = useState(0);
-  const current = morphSkills[index];
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % morphSkills.length);
-    }, 2000); // change skill every 2 seconds
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <motion.div
-        className="h-40 w-40 sm:h-52 sm:w-52 bg-gradient-to-tr from-emerald-500 via-sky-400 to-violet-500 shadow-2xl flex items-center justify-center"
-        animate={{ borderRadius: blobKeyframes }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        <motion.div
-          key={current.label}
-          initial={{ opacity: 0, y: 10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.35 }}
-          className="flex flex-col items-center justify-center text-center px-3"
-        >
-          {current.iconClass ? (
-            <i
-              className={`${current.iconClass} text-4xl sm:text-5xl mb-2`}
-            ></i>
-          ) : (
-            <span className="text-4xl sm:text-5xl mb-2">💻</span>
-          )}
-          <span className="text-sm sm:text-base font-semibold text-slate-900">
-            {current.label}
-          </span>
-        </motion.div>
-      </motion.div>
-      <p className="text-[11px] text-slate-400 uppercase tracking-[0.2em]">
-        Focused stack
-      </p>
-    </div>
-  );
-}
+// Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
 export default function HomePage() {
   return (
@@ -297,71 +231,60 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Skills with morph blob */}
+        {/* Skills with bubbles */}
         <section id="skills" className="border-b border-slate-900">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12 grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,2fr)] items-center">
-            <div>
-              <h2 className="text-xl font-semibold mb-3">Skills</h2>
-              <p className="text-sm text-slate-300 mb-5 max-w-xl">
-                My main stack is C# / .NET on the backend, with modern React /
-                Next.js on the frontend and Azure in the cloud.
-              </p>
-              <div className="grid gap-5 sm:grid-cols-2 text-sm">
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Languages</h3>
-                  <ul className="text-slate-300 text-xs space-y-1">
-                    {skillsData.languages.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Backend</h3>
-                  <ul className="text-slate-300 text-xs space-y-1">
-                    {skillsData.backend.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Frontend</h3>
-                  <ul className="text-slate-300 text-xs space-y-1">
-                    {skillsData.frontend.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Cloud & Tools</h3>
-                  <ul className="text-slate-300 text-xs space-y-1">
-                    {skillsData.cloud.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                    {skillsData.tools.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-3">Skills</h2>
+                <p className="text-sm text-slate-300 max-w-xl">
+                  My main stack is C# / .NET on the backend with React and Next.js
+                  on the frontend, plus strong experience in SQL and cloud tools.
+                </p>
               </div>
+              <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em]">
+                Hover the bubbles
+              </p>
             </div>
 
-            {/* Morphing blob with icon */}
-            <SkillMorphBlob />
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
+                  Languages
+                </h3>
+                <SkillBubbles skills={skillsData.languages} />
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
+                  Backend
+                </h3>
+                <SkillBubbles skills={skillsData.backend} />
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
+                  Frontend
+                </h3>
+                <SkillBubbles skills={skillsData.frontend} />
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
+                  Databases
+                </h3>
+                <SkillBubbles skills={skillsData.databases} />
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-4 text-emerald-400 uppercase tracking-wider">
+                  DevOps & Tools
+                </h3>
+                <SkillBubbles
+                  skills={[...skillsData.devops, ...skillsData.tools]}
+                />
+              </div>
+            </div>
           </div>
         </section>
 
