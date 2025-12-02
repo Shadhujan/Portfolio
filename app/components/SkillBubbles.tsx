@@ -1,90 +1,237 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { skillIconMap } from "@/lib/portfolioData";
 
 interface SkillBubblesProps {
   skills: string[];
 }
 
+type SkillDef = {
+  id: string;
+  label: string;
+  iconClass: string;
+};
+
+type PositionedSkill = SkillDef & {
+  x: number;
+  y: number;
+  baseSize: number;
+  isCenter: boolean;
+};
+
+// Skills that should be center / highlighted first
+const PRIORITY_ORDER = [
+  "C#",
+  ".NET",
+  "ASP.NET Core",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "SQL Server",
+  "SQL Server (T-SQL)",
+  "Azure",
+  "JavaScript",
+  "Python",
+];
+
+// Layout function: one big center bubble, others in a ring
+function layoutSkills(
+  rawSkills: SkillDef[],
+  activeId: string | null
+): PositionedSkill[] {
+  if (rawSkills.length === 0) return [];
+
+  // Decide which skill is the center one
+  let centerSkill: SkillDef | null = null;
+
+  if (activeId) {
+    centerSkill = rawSkills.find((s) => s.id === activeId) ?? null;
+  }
+
+  if (!centerSkill) {
+    const priority = rawSkills.find((s) =>
+      PRIORITY_ORDER.includes(s.label)
+    );
+    centerSkill = priority ?? rawSkills[0];
+  }
+
+  const outerSkills = rawSkills.filter((s) => s.id !== centerSkill!.id);
+
+  // Geometry for the container
+  const containerDiameter = 380; // matches w-[380px] / h-[380px]
+  const containerRadius = containerDiameter / 2;
+
+  const centerSize = 120;
+  const outerSize = 52;
+
+  const outerRadius = 120; // distance of ring from center
+  const maxReach = outerRadius + outerSize / 2;
+  if (maxReach > containerRadius) {
+    // If we ever tweak numbers, make sure ring still fits
+    console.warn("Skill ring might overflow container, adjust radii.");
+  }
+
+  const positioned: PositionedSkill[] = [];
+
+  // Center skill at (0,0)
+  positioned.push({
+    ...centerSkill!,
+    x: 0,
+    y: 0,
+    baseSize: centerSize,
+    isCenter: true,
+  });
+
+  // Outer ring (all other skills)
+  const count = outerSkills.length;
+  if (count > 0) {
+    outerSkills.forEach((skill, index) => {
+      const angle = (2 * Math.PI * index) / count - Math.PI / 2; // start at top
+      const x = outerRadius * Math.cos(angle);
+      const y = outerRadius * Math.sin(angle);
+
+      positioned.push({
+        ...skill,
+        x,
+        y,
+        baseSize: outerSize,
+        isCenter: false,
+      });
+    });
+  }
+
+  return positioned;
+}
+
 export default function SkillBubbles({ skills }: SkillBubblesProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const { positionedSkills } = useMemo(() => {
+    // 1. Convert strings to SkillDef with icons
+    const skillDefs: SkillDef[] = skills.map((skill) => {
+      let iconClass = skillIconMap[skill] || "devicon-devicon-plain";
+      if (iconClass.startsWith("devicon-")) {
+        iconClass += " colored";
+      }
+      return {
+        id: skill,
+        label: skill,
+        iconClass,
+      };
+    });
+
+    // 2. Sort by priority so important skills usually get center first
+    skillDefs.sort((a, b) => {
+      const idxA = PRIORITY_ORDER.indexOf(a.label);
+      const idxB = PRIORITY_ORDER.indexOf(b.label);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return a.label.localeCompare(b.label);
+    });
+
+    // 3. Layout with current activeId (center bubble)
+    const positioned = layoutSkills(skillDefs, activeId);
+
+    return { positionedSkills: positioned };
+  }, [skills, activeId]);
 
   return (
-    <motion.div
-      layout
-      className="relative mx-auto max-w-3xl flex flex-wrap items-center justify-center gap-3 sm:gap-4 py-10 px-4"
-    >
-      {skills.map((skill, index) => {
-        const id = skill;
-        const isHovered = hoveredId === id;
-        const isAnyHovered = hoveredId !== null;
+    <div className="flex items-center justify-center py-10">
+      <div
+        className="
+          relative w-[380px] h-[380px] sm:w-[420px] sm:h-[420px]
+          rounded-full bg-slate-950/60 border border-slate-800
+          shadow-[0_0_80px_rgba(0,0,0,0.9)]
+          overflow-hidden flex items-center justify-center
+        "
+      >
+        {/* Outer soft ring, similar to your screenshot */}
+        <div className="absolute inset-8 rounded-full border border-slate-800/50 pointer-events-none" />
 
-        // Get icon class and append 'colored' if it's a devicon class
-        let iconClass = skillIconMap[skill] || "devicon-devicon-plain";
-        if (iconClass.startsWith("devicon-")) {
-          iconClass += " colored";
-        }
+        {positionedSkills.map((skill, index) => {
+          const isHovered = hoveredId === skill.id;
+          const isCenter = skill.isCenter;
+          const hasHover = hoveredId !== null;
 
-        return (
-          <motion.button
-            key={id}
-            type="button"
-            layout
-            onMouseEnter={() => setHoveredId(id)}
-            onMouseLeave={() => setHoveredId(null)}
-            className={`relative flex items-center justify-center rounded-full bg-slate-50 border border-slate-200 shadow-lg overflow-hidden transition-shadow duration-300 ${
-              isHovered ? "shadow-2xl z-20" : "z-10"
-            }`}
-            // Animate width/height for layout shift
-            animate={{
-              width: isHovered ? 140 : 80, // Expanded vs Normal width
-              height: isHovered ? 140 : 80, // Expanded vs Normal height
-              opacity: isAnyHovered && !isHovered ? 0.6 : 1, // Dim others
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 25,
-            }}
-          >
-            {/* Floating animation (only when not hovered to avoid jitter) */}
-            <motion.div
-              className="flex flex-col items-center justify-center pointer-events-none"
-              animate={
-                isHovered
-                  ? {}
-                  : {
-                      y: [0, -3, 0],
-                    }
-              }
-              transition={{
-                duration: 3 + (index % 3), // Deterministic duration based on index
-                repeat: Infinity,
-                repeatType: "mirror",
-                delay: index * 0.1,
+          // Center bubble is always big.
+          // Outer ones get slightly smaller if something is hovered.
+          const targetScale = isCenter
+            ? isHovered
+              ? 1.05
+              : 1
+            : hasHover
+            ? isHovered
+              ? 1.1
+              : 0.8
+            : 1;
+
+          const opacity = isCenter ? 1 : hasHover && !isHovered ? 0.8 : 1;
+
+          return (
+            <motion.button
+              key={skill.id}
+              type="button"
+              className="absolute rounded-full bg-slate-950 flex items-center justify-center shadow-lg border border-slate-800"
+              style={{
+                width: skill.baseSize,
+                height: skill.baseSize,
+                zIndex: isCenter || isHovered ? 40 : 10,
               }}
+              initial={{ x: skill.x, y: skill.y, scale: 0.9 }}
+              animate={{
+                x: skill.x,
+                y: skill.y,
+                scale: targetScale,
+                opacity,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 22,
+              }}
+              onMouseEnter={() => {
+                setHoveredId(skill.id);
+                // Make this skill the new center
+                setActiveId(skill.id);
+              }}
+              onMouseLeave={() => setHoveredId(null)}
             >
-              <i
-                className={`${iconClass} transition-all duration-300 ${
-                  isHovered ? "text-6xl" : "text-4xl"
-                }`}
-              />
-            </motion.div>
+              {/* Inner icon with subtle breathing animation */}
+              <motion.div
+                animate={{ y: [0, -2, 0] }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  delay: index * 0.08,
+                }}
+              >
+                <i
+                  className={`${skill.iconClass} transition-all duration-300`}
+                  style={{
+                    fontSize: `${skill.baseSize * (skill.isCenter ? 0.45 : 0.5)}px`,
+                  }}
+                />
+              </motion.div>
 
-            {/* Label tooltip - visible only on hover */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] font-medium text-slate-50 shadow-sm pointer-events-none whitespace-nowrap"
-            >
-              {skill}
-            </motion.div>
-          </motion.button>
-        );
-      })}
-    </motion.div>
+              {/* Tooltip only on hover */}
+              {isHovered && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap z-50 pointer-events-none border border-slate-700"
+                >
+                  {skill.label}
+                </motion.div>
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
