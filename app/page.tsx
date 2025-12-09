@@ -8,6 +8,8 @@ import {
   skillsData,
 } from "@/lib/portfolioData";
 import SkillBubbles from "./components/SkillBubbles";
+import AuroraBackground from "./components/hero-effects/AuroraBackground";
+import FloatingCards from "./components/hero-effects/FloatingCards";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
@@ -57,96 +59,78 @@ export default function HomePage() {
       {/* Main */}
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-slate-900 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-          <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-center">
+        <section className="relative border-b border-slate-900 bg-slate-950 overflow-hidden min-h-[600px] flex items-center">
+          {/* Aurora Background */}
+          <AuroraBackground />
+
+          <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12 grid gap-8 md:grid-cols-2 items-center relative z-10 w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <motion.p
-                className="text-xs uppercase tracking-[0.2em] text-emerald-400 mb-3"
+              <motion.div
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                Portfolio v1.0.0
-              </motion.p>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                Available for hire
+              </motion.div>
+              
               <motion.h1
-                className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-4"
+                className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 tracking-tight"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
               >
-                Explore my work in a{" "}
-                <span className="text-emerald-400">clean UI</span> or in{" "}
-                <span className="text-emerald-400">CLI mode</span>.
+                Building <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                  digital experiences
+                </span>
+                <br />
+                that matter.
               </motion.h1>
+              
               <motion.p
-                className="text-sm sm:text-base text-slate-300 mb-6 max-w-xl"
+                className="text-base sm:text-lg text-slate-400 mb-6 max-w-lg leading-relaxed"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
               >
-                I&apos;m a .NET developer who likes both structure and fun.
-                Visual layout for everyone, terminal experience for devs.
-                Same projects, two different ways to see them.
+                I&apos;m a Full Stack Developer specializing in .NET and modern web technologies. 
+                I craft clean, performant, and interactive applications.
               </motion.p>
+              
               <motion.div
-                className="flex flex-wrap gap-3"
+                className="flex flex-wrap gap-4"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45 }}
               >
                 <Link
                   href="/cli"
-                  className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-emerald-400 transition"
+                  className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-emerald-500 px-8 font-medium text-slate-950 transition-all duration-300 hover:bg-emerald-400 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                 >
-                  Open CLI experience
-                  <span className="text-[10px] bg-slate-950/10 rounded-full px-2 py-0.5">
-                    whoami, ls, cat...
-                  </span>
+                  <span className="mr-2">Open CLI Terminal</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
                 <a
-                  href="#about"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-4 py-2 text-sm font-medium text-slate-100 hover:border-emerald-400 hover:text-emerald-300 transition"
+                  href="#projects"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-slate-700 bg-slate-900/50 px-8 font-medium text-slate-300 transition-all duration-300 hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-slate-800"
                 >
-                  Continue with normal portfolio
+                  View Projects
                 </a>
               </motion.div>
             </motion.div>
 
-            {/* Summary + micro-timeline card */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.35 }}
-              className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:p-5 shadow-xl flex flex-col gap-4"
-            >
-              <div>
-                <p className="text-xs text-slate-400 mb-1">Summary</p>
-                <p className="text-sm font-medium mb-1">
-                  {aboutData.role} based in {aboutData.location}
-                </p>
-                <p className="text-xs text-slate-300">{aboutData.summary}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 mb-2">Recent focus</p>
-                <div className="flex flex-wrap gap-2 text-[11px] text-slate-200">
-                  {["ASP.NET Core", "Next.js", "Azure"].map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-slate-800 px-3 py-1 border border-slate-700"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="text-[11px] text-slate-500">
-                <p>2022 → Now · Building .NET APIs and full-stack apps.</p>
-              </div>
-            </motion.div>
+            <div className="relative h-[400px] hidden md:block">
+               <FloatingCards />
+            </div>
           </div>
         </section>
 
