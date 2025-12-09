@@ -10,7 +10,7 @@ import {
 } from "@/lib/portfolioData";
 import SkillOrbit from "./components/SkillOrbit";
 import InfiniteScrollSkills from "./components/InfiniteScrollSkills";
-import AuroraBackground from "./components/hero-effects/AuroraBackground";
+import PlanetBackground from "./components/hero-effects/PlanetBackground";
 import FloatingCards from "./components/hero-effects/FloatingCards";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
@@ -70,8 +70,8 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative border-b border-slate-900 bg-slate-950 overflow-hidden min-h-[600px] flex items-center">
-          {/* Aurora Background */}
-          <AuroraBackground />
+          {/* Interactive Planet Background */}
+          <PlanetBackground />
 
           <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12 grid gap-8 md:grid-cols-2 items-center relative z-10 w-full">
             <motion.div
@@ -98,12 +98,10 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
               >
-                Building <br />
+                Shadhujan <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                  digital experiences
+                  Jeyachandran
                 </span>
-                <br />
-                that matter.
               </motion.h1>
               
               <motion.p
@@ -122,13 +120,14 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45 }}
               >
-                <Link
-                  href="/cli"
+                <a
+                  href="/cv/Shadhujan Jeyachandran CV 2025_Feb2.pdf"
+                  download
                   className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-emerald-500 px-8 font-medium text-slate-950 transition-all duration-300 hover:bg-emerald-400 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                 >
-                  <span className="mr-2">Open CLI Terminal</span>
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </Link>
+                  <span className="mr-2">Download Resume</span>
+                  <span className="group-hover:translate-y-1 transition-transform text-lg">↓</span>
+                </a>
                 <a
                   href="#projects"
                   className="inline-flex h-12 items-center justify-center rounded-full border border-slate-700 bg-slate-900/50 px-8 font-medium text-slate-300 transition-all duration-300 hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-slate-800"
