@@ -7,7 +7,7 @@ import {
   projectsData,
   skillsData,
 } from "@/lib/portfolioData";
-import SkillBubbles from "./components/SkillBubbles";
+import SkillOrbit from "./components/SkillOrbit";
 import AuroraBackground from "./components/hero-effects/AuroraBackground";
 import FloatingCards from "./components/hero-effects/FloatingCards";
 
@@ -225,7 +225,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <SkillBubbles
+            <SkillOrbit
               skills={Array.from(
                 new Set([
                   ...skillsData.languages,
