@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -8,14 +9,23 @@ import {
   skillsData,
 } from "@/lib/portfolioData";
 import SkillOrbit from "./components/SkillOrbit";
+import InfiniteScrollSkills from "./components/InfiniteScrollSkills";
 import AuroraBackground from "./components/hero-effects/AuroraBackground";
 import FloatingCards from "./components/hero-effects/FloatingCards";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
 export default function HomePage() {
+  const [is3DView, setIs3DView] = useState(true);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
+      {/* ... keeping existing header and main content structure ... */}
+      
+      {/* Skipping to Skills section replacement, needs to match indentation context of the file */}
+      {/* Note: I cannot use '...' in replacement content accurately without full file context in one go. 
+         I will target the specific Skills section block instead.
+      */}
       {/* Header */}
       <header className="border-b border-slate-800/80 backdrop-blur-sm bg-slate-950/60 sticky top-0 z-[9999]">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
@@ -209,7 +219,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Skills with bubbles */}
+        {/* Skills with toggle */}
         <section id="skills" className="border-b border-slate-900">
           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
@@ -220,28 +230,55 @@ export default function HomePage() {
                   Blazor, and Cloud Native solutions.
                 </p>
               </div>
-              <div className="text-right">
-                <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em] mb-1">
-                  3D Tech Stack
-                </p>
-                <p className="text-[10px] text-emerald-500/80">
-                  Drag to rotate · Hover to explore
-                </p>
+              <div className="flex flex-col items-end gap-3">
+                 <div className="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                    <button
+                      onClick={() => setIs3DView(true)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        is3DView 
+                          ? "bg-slate-700 text-emerald-400 shadow-sm" 
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      3D Orbit
+                    </button>
+                    <button
+                      onClick={() => setIs3DView(false)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        !is3DView 
+                          ? "bg-slate-700 text-emerald-400 shadow-sm" 
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      Infinite Stream
+                    </button>
+                 </div>
+                {is3DView && (
+                  <p className="text-[10px] text-emerald-500/80">
+                    Drag to rotate · Hover to explore
+                  </p>
+                )}
               </div>
             </div>
 
-            <SkillOrbit
-              skills={Array.from(
-                new Set([
-                  ...skillsData.languages,
-                  ...skillsData.backend,
-                  ...skillsData.frontend,
-                  ...skillsData.databases,
-                  ...skillsData.devops,
-                  ...skillsData.tools,
-                ])
-              )}
-            />
+            <div className="min-h-[500px] flex items-center justify-center">
+               {is3DView ? (
+                  <SkillOrbit
+                    skills={Array.from(
+                      new Set([
+                        ...skillsData.languages,
+                        ...skillsData.backend,
+                        ...skillsData.frontend,
+                        ...skillsData.databases,
+                        ...skillsData.devops,
+                        ...skillsData.tools,
+                      ])
+                    )}
+                  />
+               ) : (
+                  <InfiniteScrollSkills skillsData={skillsData} />
+               )}
+            </div>
           </div>
         </section>
 
