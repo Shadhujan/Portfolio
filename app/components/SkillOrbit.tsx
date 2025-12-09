@@ -43,14 +43,14 @@ const SkillNode = ({
             {isCustomImage ? (
               <img src={iconClass} alt={label} className="w-8 h-8 object-contain" />
             ) : isGeneric ? (
-              <span className="text-sm font-bold text-slate-300">{label.slice(0, 2).toUpperCase()}</span>
+              <span className="text-sm font-bold text-slate-300 select-none">{label.slice(0, 2).toUpperCase()}</span>
             ) : (
               <i className={`${iconClass} text-2xl`} />
             )}
           </div>
           <div
             className={`
-              mt-2 text-[10px] font-medium px-2 py-0.5 rounded bg-slate-950/80 border border-slate-800 text-slate-200 whitespace-nowrap
+              mt-2 text-[10px] font-medium px-2 py-0.5 rounded bg-slate-950/80 border border-slate-800 text-slate-200 whitespace-nowrap select-none
               transition-opacity duration-300
               ${hovered ? "opacity-100" : "opacity-0"}
             `}
@@ -123,7 +123,7 @@ const RotatingGroup = ({ skills }: { skills: string[] }) => {
 
 const SkillOrbit = ({ skills }: SkillOrbitProps) => {
   return (
-    <div className="w-full h-[500px] relative cursor-move">
+    <div className="w-full h-[500px] relative cursor-move select-none">
       <Canvas camera={{ position: [0, 0, 14], fov: 50 }}>
         <fog attach="fog" args={["#020617", 10, 25]} />
         <ambientLight intensity={0.5} />
