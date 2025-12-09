@@ -15,6 +15,7 @@ import FloatingCards from "./components/hero-effects/FloatingCards";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BlogCarousel from "./components/BlogCarousel";
+import ContactSection from "./components/ContactSection";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
@@ -256,65 +257,7 @@ export default function HomePage() {
         </section>
 
         {/* Contact */}
-        <section id="contact">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <h2 className="text-xl font-semibold mb-3">Contact</h2>
-            <p className="text-sm text-slate-300 mb-2">
-              I&apos;m open for interesting .NET / full-stack roles and
-              freelance projects.
-            </p>
-            <div className="flex flex-wrap gap-3 text-sm">
-              {aboutData.email && (
-                <a
-                  href={`mailto:${aboutData.email}`}
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Email me
-                </a>
-              )}
-              {aboutData.github && (
-                <a
-                  href={aboutData.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  GitHub
-                </a>
-              )}
-              {aboutData.linkedin && (
-                <a
-                  href={aboutData.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  LinkedIn
-                </a>
-              )}
-              {aboutData.medium && (
-                <a
-                  href={aboutData.medium}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Medium
-                </a>
-              )}
-              {aboutData.website && (
-                <a
-                  href={aboutData.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Website
-                </a>
-              )}
-            </div>
-          </div>
-        </section>
+        <ContactSection />
       </main>
 
       {/* Footer */}

@@ -139,7 +139,8 @@ export default function CLIPortfolioPage() {
         if (aboutData.github) output.push(`GitHub: ${aboutData.github}`);
         if (aboutData.linkedin) output.push(`LinkedIn: ${aboutData.linkedin}`);
         if (aboutData.medium) output.push(`Medium: ${aboutData.medium}`);
-        if (aboutData.website) output.push(`Website: ${aboutData.website}`);
+        if (aboutData.instagram) output.push(`Instagram: ${aboutData.instagram}`);
+
         if (aboutData.email) output.push(`Email: ${aboutData.email}`);
         break;
       }

@@ -12,9 +12,10 @@ export const aboutData = {
   github: "https://github.com/Shadhujan",
   linkedin: "https://lk.linkedin.com/in/shadhujan",
   medium: "https://shadhujan.medium.com/",
-  website: "https://mdatazone.com/", // Keeping website if user wants it, though not explicitly in new snippet, previous context had it.
+  instagram: "https://www.instagram.com/jeya.shad38",
+  // website: "https://mdatazone.com/", // Removed per user request
   featuredProject: "https://cis-bunona-game.netlify.app/",
-  email: "you@example.com",
+  email: "jeya38shadhujan@gmail.com",
 };
 
 export const projectsData = [
