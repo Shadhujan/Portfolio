@@ -31,51 +31,39 @@ varying vec3 vPosition;
 varying vec2 vUv;
 
 void main() {
-  // Normalizing variables
   vec3 normal = normalize(vNormal);
-  vec3 viewDir = normalize(-vPosition); // View direction in camera space
+  vec3 viewDir = normalize(-vPosition);
 
-  // Fresnel effect for the rim light
+  // Fresnel
   float fresnel = dot(viewDir, normal);
   fresnel = clamp(1.0 - fresnel, 0.0, 1.0);
-  fresnel = pow(fresnel, 3.0); // Adjust power to control sharpness
+  fresnel = pow(fresnel, 2.0); // Sharper edge (lower power = thicker edge)
 
-  // Mouse interaction: Calculate direction to mouse
-  // Mapping uMouse (0 to 1) to view space roughly
+  // Mouse Light
   vec3 lightDir = normalize(vec3(uMouse.x * 2.0 - 1.0, uMouse.y * 2.0 - 1.0, 1.0));
   
-  // Diffuse lighting based on mouse position
-  float diffuse = max(dot(normal, lightDir), 0.0);
-  
-  // Combine Fresnel and Diffuse for the glow
-  // We want the edge to always glow (Fresnel), and the face to glow based on mouse (Diffuse/Rim)
-  
-  float glowIntensity = fresnel * 2.5; 
-  
-  // Add a moving "sun" glow that follows mouse
-  // We use the dot product of normal and lightDir, but focused on the edge
+  // Sun/Hotspot
   float sunGlow = max(0.0, dot(normal, lightDir));
-  sunGlow = pow(sunGlow, 6.0) * 1.5; // Sharp highlight
+  sunGlow = pow(sunGlow, 4.0) * 4.0; // Lower power = wider glow, Higher multiplier = brighter
 
-  vec3 finalColor = mix(vec3(0.0), uGlowColor, fresnel);
-  finalColor += uGlowColor * sunGlow; // Add sun highlight
+  vec3 finalColor = uColor; 
+  finalColor += uGlowColor * fresnel * 4.0; // Extremely bright edge
+  finalColor += uGlowColor * sunGlow; 
 
-  // Atmospheric fade at the bottom
-  float fade = smoothstep(-1.0, 1.0, vPosition.y); 
-
-  gl_FragColor = vec4(finalColor, fresnel * (0.8 + sunGlow * 0.5)); 
+  // Make sure alpha is high enough
+  gl_FragColor = vec4(finalColor, 1.0); 
 }
 `;
 
 const Planet = () => {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const { viewport, size } = useThree();
+  const { viewport } = useThree();
 
   const uniforms = useMemo(
     () => ({
-      uColor: { value: new Color("#020617") }, // Dark slate
-      uGlowColor: { value: new Color("#22d3ee") }, // Cyan-400
+      uColor: { value: new Color("#0f172a") }, // Darker slate
+      uGlowColor: { value: new Color("#38bdf8") }, // Sky-400
       uMouse: { value: new Vector2(0.5, 0.5) },
       uTime: { value: 0 },
     }),
@@ -86,8 +74,7 @@ const Planet = () => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
       
-      // Smoothly interpolate mouse position
-      const targetX = state.pointer.x * 0.5 + 0.5; // Convert -1..1 to 0..1
+      const targetX = state.pointer.x * 0.5 + 0.5;
       const targetY = state.pointer.y * 0.5 + 0.5;
       
       materialRef.current.uniforms.uMouse.value.lerp(
@@ -100,8 +87,8 @@ const Planet = () => {
   return (
     <mesh 
       ref={meshRef} 
-      position={[0, -viewport.height * 0.65, -8]} // Positioned lower to be a horizon
-      scale={[viewport.width * 2, viewport.width * 2, viewport.width * 2]} // Massive scale
+      position={[0, -1.5, -4]} // Hardcoded to be clearly visible at bottom of screen
+      scale={[10, 10, 10]} // Fixed large scale
     >
       <sphereGeometry args={[1, 64, 64]} />
       <shaderMaterial
@@ -109,8 +96,7 @@ const Planet = () => {
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={uniforms}
-        transparent
-        // blending={THREE.AdditiveBlending}
+        transparent={true} // Allow glow transparency
         depthWrite={false}
       />
     </mesh>
@@ -155,12 +141,14 @@ const Stars = () => {
           count={positions.length / 3}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
         <bufferAttribute
           attach="attributes-size"
           count={sizes.length}
           array={sizes}
           itemSize={1}
+          args={[sizes, 1]}
         />
       </bufferGeometry>
       <pointsMaterial
