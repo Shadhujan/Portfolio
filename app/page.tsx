@@ -14,6 +14,7 @@ import PlanetBackground from "./components/hero-effects/PlanetBackground";
 import FloatingCards from "./components/hero-effects/FloatingCards";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import BlogCarousel from "./components/BlogCarousel";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
@@ -245,6 +246,13 @@ export default function HomePage() {
                )}
             </div>
           </div>
+        </section>
+
+        {/* Blog Carousel */}
+        <section id="blog" className="border-b border-slate-900">
+           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
+             <BlogCarousel />
+           </div>
         </section>
 
         {/* Contact */}
