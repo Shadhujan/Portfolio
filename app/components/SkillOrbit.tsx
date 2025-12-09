@@ -20,6 +20,8 @@ const SkillNode = ({
   iconClass: string;
 }) => {
   const [hovered, setHovered] = useState(false);
+  const isGeneric = iconClass.includes("devicon-devicon-plain");
+  const isCustomImage = iconClass.startsWith("/");
 
   return (
     <group position={position}>
@@ -34,11 +36,17 @@ const SkillNode = ({
         >
           <div
             className={`
-              w-12 h-12 rounded-full bg-slate-900/80 border border-slate-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)]
+              w-12 h-12 rounded-full bg-slate-900/80 border border-slate-700 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden
               ${hovered ? "border-emerald-500 bg-slate-900 shadow-[0_0_20px_rgba(16,185,129,0.4)]" : ""}
             `}
           >
-            <i className={`${iconClass} text-2xl`} />
+            {isCustomImage ? (
+              <img src={iconClass} alt={label} className="w-8 h-8 object-contain" />
+            ) : isGeneric ? (
+              <span className="text-sm font-bold text-slate-300">{label.slice(0, 2).toUpperCase()}</span>
+            ) : (
+              <i className={`${iconClass} text-2xl`} />
+            )}
           </div>
           <div
             className={`

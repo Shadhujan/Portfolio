@@ -92,8 +92,7 @@ export const skillsData = {
     "REST APIs",
     "Microservices",
     "RabbitMQ",
-    "Worker Services",
-    "API Gateways",
+    "Ocelot API Gateway",
     "Clean Architecture",
     "FastAPI",
     "Flask",
@@ -124,7 +123,6 @@ export const skillsData = {
   ],
   tools: [
     "Selenium",
-    "OpenAI API",
     "Postman",
     "Docker", // Duplicate in devops, but user listed it in tools too
     "Serilog (Custom Sinks)"
@@ -135,8 +133,8 @@ export const skillsData = {
 export const skillIconMap: Record<string, string> = {
   "C#": "devicon-csharp-plain",
   ".NET": "devicon-dotnetcore-plain",
-  "ASP.NET Core": "devicon-dotnetcore-plain",
-  "Entity Framework Core": "devicon-dotnetcore-plain",
+  "ASP.NET Core": "/icons/aspnetcore.png",
+  "Entity Framework Core": "/icons/efcore.png",
   "React": "devicon-react-original",
   "Next.js": "devicon-nextjs-original",
   "JavaScript": "devicon-javascript-plain",
@@ -154,17 +152,23 @@ export const skillIconMap: Record<string, string> = {
   "MongoDB": "devicon-mongodb-plain",
   "PostgreSQL": "devicon-postgresql-plain",
   "MySQL": "devicon-mysql-plain",
-  "Supabase": "devicon-postgresql-plain", 
+  "Supabase": "/icons/supabase.png",
   "Tailwind CSS": "devicon-tailwindcss-plain",
   "Bootstrap": "devicon-bootstrap-plain",
   "HTML": "devicon-html5-plain",
   "CSS": "devicon-css3-plain",
-  "Postman": "devicon-postman-plain", // Check availability
+  "Postman": "/icons/postman.png",
   "Selenium": "devicon-selenium-original",
   "Flask": "devicon-flask-original",
-  "FastAPI": "devicon-fastapi-plain", // Check availability
+  "FastAPI": "devicon-fastapi-plain",
   "OpenCV": "devicon-opencv-plain",
   "Jenkins": "devicon-jenkins-plain",
-  "RabbitMQ": "devicon-rabbitmq-plain", // Check availability
+  "RabbitMQ": "/icons/rabbitmq.png",
   "Redis": "devicon-redis-plain",
+  "Blazor": "/icons/blazor.png",
+  "CI/CD (Azure DevOps)": "/icons/cicd.png",
+  "REST APIs": "/icons/restapi.png",
+  "Serilog (Custom Sinks)": "/icons/serilog.png",
+  "Microservices": "/icons/microservices.png",
+  "Ocelot API Gateway": "/icons/ocelot.png",
 };
