@@ -113,7 +113,8 @@ export const skillsData = {
     "SQL Server (T-SQL)",
     "MongoDB",
     "MySQL",
-    "Supabase"
+    "Supabase",
+    "Redis"
   ],
   devops: [
     "Docker",
@@ -122,10 +123,18 @@ export const skillsData = {
     "Jenkins",
   ],
   tools: [
-    "Selenium",
+    "Visual Studio",
+    "VS Code",
+    "Android Studio",
     "Postman",
-    "Docker", // Duplicate in devops, but user listed it in tools too
-    "Serilog (Custom Sinks)"
+    "Adobe Illustrator",
+    "Adobe Photoshop"
+  ],
+  architecture: [
+    "Clean Architecture",
+    "Layered Architecture",
+    "Microservices Architecture",
+    "Meta Data Driven Architecture"
   ]
 };
 
@@ -170,5 +179,10 @@ export const skillIconMap: Record<string, string> = {
   "REST APIs": "/icons/restapi.png",
   "Serilog (Custom Sinks)": "/icons/serilog.png",
   "Microservices": "/icons/microservices.png",
-  "Ocelot API Gateway": "/icons/ocelot.png",
+  "Microservices Architecture": "/icons/microservices.png", // Reusing icon
+  "Visual Studio": "devicon-visualstudio-plain",
+  "VS Code": "devicon-vscode-plain",
+  "Android Studio": "devicon-androidstudio-plain",
+  "Adobe Illustrator": "devicon-illustrator-plain",
+  "Adobe Photoshop": "devicon-photoshop-plain",
 };
