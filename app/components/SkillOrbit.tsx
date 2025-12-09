@@ -25,7 +25,7 @@ const SkillNode = ({
 
   return (
     <group position={position}>
-      <Html center distanceFactor={12}>
+      <Html center distanceFactor={12} zIndexRange={[1000, 0]}>
         <div
           className={`
             relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300
@@ -138,10 +138,6 @@ const SkillOrbit = ({ skills }: SkillOrbitProps) => {
           rotateSpeed={0.5}
         />
       </Canvas>
-      
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-slate-500 pointer-events-none">
-        Drag to rotate · Hover to explore
-      </div>
     </div>
   );
 };

@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
       {/* Header */}
-      <header className="border-b border-slate-800/80 backdrop-blur-sm bg-slate-950/60 sticky top-0 z-20">
+      <header className="border-b border-slate-800/80 backdrop-blur-sm bg-slate-950/60 sticky top-0 z-[9999]">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <motion.div
@@ -212,17 +212,22 @@ export default function HomePage() {
         {/* Skills with bubbles */}
         <section id="skills" className="border-b border-slate-900">
           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
               <div>
                 <h2 className="text-xl font-semibold mb-3">Skill Ecosystem</h2>
-                <p className="text-sm text-slate-300 max-w-xl">
-                  A comprehensive view of my technical stack, centered around .NET
-                  and modern web technologies.
+                <p className="text-sm text-slate-300 max-w-xl leading-relaxed">
+                  A high-performance technical stack centered around .NET Microservices, 
+                  Blazor, and Cloud Native solutions.
                 </p>
               </div>
-              <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em]">
-                Interactive Cloud
-              </p>
+              <div className="text-right">
+                <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em] mb-1">
+                  3D Tech Stack
+                </p>
+                <p className="text-[10px] text-emerald-500/80">
+                  Drag to rotate · Hover to explore
+                </p>
+              </div>
             </div>
 
             <SkillOrbit
