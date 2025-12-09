@@ -213,6 +213,9 @@ export default function CLIPortfolioPage() {
           "",
           "Tools:",
           "  - " + skillsData.tools.join("\n  - "),
+          "",
+          "Architecture:",
+          "  - " + (skillsData.architecture?.join("\n  - ") || ""),
         ];
         break;
       }

@@ -93,7 +93,7 @@ const RotatingGroup = ({ skills }: { skills: string[] }) => {
       const position = new THREE.Vector3(x * sphereRadius, y * sphereRadius, z * sphereRadius);
 
       let iconClass = skillIconMap[skills[i]] || "devicon-devicon-plain";
-      if (iconClass.startsWith("devicon-")) {
+      if (iconClass.startsWith("devicon-") && !iconClass.includes("colored") && !iconClass.includes("text-")) {
         iconClass += " colored";
       }
 

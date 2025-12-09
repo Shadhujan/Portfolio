@@ -83,7 +83,9 @@ export const skillsData = {
     "JavaScript",
     "Python",
     "Java",
-    "PHP"
+    "PHP",
+    "Bash",
+    "Markdown"
   ],
   backend: [
     ".NET",
@@ -102,6 +104,7 @@ export const skillsData = {
   frontend: [
     "React",
     "Next.js",
+    "Three.js",
     "Tailwind CSS",
     "Bootstrap",
     "Blazor",
@@ -127,6 +130,9 @@ export const skillsData = {
     "VS Code",
     "Android Studio",
     "Postman",
+    "Obsidian",
+    "Playwright",
+    "Selenium",
     "Adobe Illustrator",
     "Adobe Photoshop"
   ],
@@ -145,7 +151,7 @@ export const skillIconMap: Record<string, string> = {
   "ASP.NET Core": "/icons/aspnetcore.png",
   "Entity Framework Core": "/icons/efcore.png",
   "React": "devicon-react-original",
-  "Next.js": "devicon-nextjs-original",
+  "Next.js": "devicon-nextjs-plain text-white",
   "JavaScript": "devicon-javascript-plain",
   "TypeScript": "devicon-typescript-plain",
   "Azure": "devicon-azure-plain",
@@ -167,12 +173,13 @@ export const skillIconMap: Record<string, string> = {
   "HTML": "devicon-html5-plain",
   "CSS": "devicon-css3-plain",
   "Postman": "/icons/postman.png",
-  "Selenium": "devicon-selenium-original",
-  "Flask": "devicon-flask-original",
+  // "Selenium": "devicon-selenium-original", // Removed old duplicate
+  "Flask": "devicon-flask-plain text-white",
   "FastAPI": "devicon-fastapi-plain",
   "OpenCV": "devicon-opencv-plain",
   "Jenkins": "devicon-jenkins-plain",
   "RabbitMQ": "/icons/rabbitmq.png",
+  "Ocelot API Gateway": "/icons/ocelot.png",
   "Redis": "devicon-redis-plain",
   "Blazor": "/icons/blazor.png",
   "CI/CD (Azure DevOps)": "/icons/cicd.png",
@@ -185,4 +192,10 @@ export const skillIconMap: Record<string, string> = {
   "Android Studio": "devicon-androidstudio-plain",
   "Adobe Illustrator": "devicon-illustrator-plain",
   "Adobe Photoshop": "devicon-photoshop-plain",
+  "Bash": "devicon-bash-plain",
+  "Markdown": "devicon-markdown-original text-blue-500",
+  "Obsidian": "/icons/obsidian.png", 
+  "Three.js": "/icons/threejs.png",
+  "Playwright": "/icons/playwright.png",
+  "Selenium": "devicon-selenium-original",
 };

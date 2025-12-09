@@ -18,7 +18,7 @@ interface InfiniteScrollSkillsProps {
 const SkillCard = ({ skill }: { skill: string }) => {
   const iconClass = skillIconMap[skill] || "devicon-devicon-plain";
   let displayIconClass = iconClass;
-  if (iconClass.startsWith("devicon-")) {
+  if (iconClass.startsWith("devicon-") && !iconClass.includes("colored") && !iconClass.includes("text-")) {
     displayIconClass += " colored";
   }
 
