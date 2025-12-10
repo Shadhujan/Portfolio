@@ -108,13 +108,17 @@ export default function AboutPage() {
                               <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 p-8 rounded-3xl relative hover:border-emerald-500/30 transition-all duration-300 hover:bg-slate-900/60 hover:-translate-y-1 group-hover:shadow-2xl shadow-emerald-900/5 h-full flex flex-col justify-between">
                                  <div>
                                     <div className="flex justify-between items-start mb-6">
-                                       <div className="w-12 h-12 bg-slate-950/80 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 transition-all duration-300 shadow-lg shadow-emerald-500/5 group-hover:shadow-emerald-500/20">
-                                          <span className="font-bold text-xl font-mono">{idx + 1}</span>
-                                       </div>
-                                       <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                                         {edu.year}
-                                       </span>
+                                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-black/20">
+                                       {edu.logo ? (
+                                          <img src={edu.logo} alt={edu.institution} className="w-full h-full object-contain" />
+                                       ) : (
+                                          <span className="font-bold text-xl font-mono text-emerald-400">{idx + 1}</span>
+                                       )}
                                     </div>
+                                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                      {edu.year}
+                                    </span>
+                                 </div>
 
                                     <h3 className="text-xl font-bold text-slate-100 mb-2 group-hover:text-emerald-300 transition-colors">{edu.degree}</h3>
                                     <p className="text-slate-400 text-sm font-medium">{edu.institution}</p>

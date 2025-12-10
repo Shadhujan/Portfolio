@@ -15,24 +15,28 @@ export const aboutData = {
       institution: "University of Bedfordshire, UK (SLIIT)",
       result: "First Class Hons",
       year: "2025 Jan – Oct", 
+      logo: "/acedemic/UoB-min.jpg"
     },
     {
       degree: "Higher Diploma in IT",
       institution: "SLIIT CITY UNI",
       result: "3.30 GPA",
       year: "2023 Feb – 2024 Dec",
+      logo: "/acedemic/SCU-min.jpg"
     },
     {
       degree: "Secondary Education",
       institution: "BT/ St. Michael's College",
       result: "",
       year: "2015 – 2019",
+      logo: "/acedemic/SMC-min.jpg"
     },
     {
       degree: "Primary & Secondary Education",
       institution: "BT/Chenkalady Central College",
       result: "",
       year: "2006 – 2014",
+      logo: "/acedemic/CCC-min.jpg"
     }
   ],
   github: "https://github.com/Shadhujan",
