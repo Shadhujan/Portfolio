@@ -75,6 +75,10 @@ body {
   animation: scroll-right 80s linear infinite;
 }
 
+.animate-scroll {
+  animation: scroll-left 30s linear infinite;
+}
+
 .pause-on-hover:hover .animate-scroll-left,
 .pause-on-hover:hover .animate-scroll-right {
   animation-play-state: paused;

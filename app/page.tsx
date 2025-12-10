@@ -170,10 +170,13 @@ export default function HomePage() {
                         "I believe that the best code isn't just written, it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
                       </p>
                       <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:font-serif first-letter:text-slate-100">
-                        Based in Colombo, Sri Lanka, I bridge the gap between complex backend architecture and intuitive user experiences. My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
+                        Hi, I’m <span className="text-slate-200 font-semibold">Shadhujan Jeyachandran</span>, a Full Stack Developer based in Colombo, Sri Lanka. I currently work as an <span className="text-emerald-400">Intern Software Engineer at M Data Zone</span> (since April 2025).
+                      </p>
+                      <p className="mb-6">
+                        I graduated with a <strong className="text-slate-200">BSc. (Hons) in Computer Science</strong> from the University of Bedfordshire, UK (SLIIT) with <span className="text-emerald-400 font-medium">First Class Honours</span>. Prior to that, I completed my <strong className="text-slate-200">Higher Diploma in IT</strong> at SLIIT CITY UNI with a 3.30 GPA.
                       </p>
                       <p>
-                        Whether designing event-driven microservices or polishing a UI until it gleams, I bring a holistic perspective to every project.
+                        My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
                       </p>
                    </div>
                 </motion.div>
