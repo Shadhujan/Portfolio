@@ -141,7 +141,7 @@ export default function HomePage() {
                       {/* Floating Badge */}
                       <div className="absolute bottom-6 left-6 z-20">
                          <span className="bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 uppercase tracking-widest mb-1 inline-block">
-                           Editor's Pick
+                           Dev's Pick
                          </span>
                          <p className="text-white font-serif text-lg italic opacity-90">
                            "Engineering with soul."
@@ -167,7 +167,7 @@ export default function HomePage() {
 
                    <div className="prose prose-invert prose-lg text-slate-400 relative">
                       <p className="lead border-l-4 border-emerald-500 pl-6 italic text-xl text-slate-300 mb-6">
-                        "I believe that the best code isn't just written—it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
+                        "I believe that the best code isn't just written, it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
                       </p>
                       <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:font-serif first-letter:text-slate-100">
                         Based in Colombo, Sri Lanka, I bridge the gap between complex backend architecture and intuitive user experiences. My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
