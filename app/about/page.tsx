@@ -76,79 +76,78 @@ export default function AboutPage() {
              </div>
           </section>
 
-          {/* Academic Foundation: Snake Layout */}
-          <section className="max-w-4xl mx-auto">
+          {/* Academic Foundation: Vertical Timeline */}
+          <section className="max-w-5xl mx-auto px-4 sm:px-6"> 
              <h2 className="text-3xl font-bold mb-16 text-slate-100 flex items-center gap-3">
                 <span className="w-12 h-1 bg-emerald-500 rounded-full"></span>
                 Academic Foundation
              </h2>
              
              <div className="relative">
-                {/* Connector logic handles the lines now */}
+                {/* Center Line */}
+                <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500/20 via-emerald-500/50 to-emerald-500/20 transform md:-translate-x-1/2" />
 
-                <div className="grid md:grid-cols-2 gap-y-12 gap-x-8 relative">
+                <div className="space-y-12">
                    {/* @ts-ignore */}
                    {aboutData.education?.map((edu: any, idx: number) => {
-                      const isLeft = idx === 0 || idx === 3;
-                      const colClass = isLeft ? "md:col-start-1" : "md:col-start-2";
+                      const isLeft = idx % 2 === 0;
                       
                       return (
                         <motion.div
                            key={idx}
-                           initial={{ opacity: 0, scale: 0.9 }}
-                           whileInView={{ opacity: 1, scale: 1 }}
-                           viewport={{ once: true }}
+                           initial={{ opacity: 0, y: 50 }}
+                           whileInView={{ opacity: 1, y: 0 }}
+                           viewport={{ once: true, margin: "-100px" }}
                            transition={{ duration: 0.5, delay: idx * 0.1 }}
-                           className={`relative ${colClass}`}
+                           className={`relative flex flex-col md:flex-row gap-8 ${
+                              isLeft ? "md:flex-row-reverse" : ""
+                           }`}
                         >
-                           <div className="group relative h-full">
-                              {/* Glow Effect */}
-                              <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
-                              
-                              <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 p-8 rounded-3xl relative hover:border-emerald-500/30 transition-all duration-300 hover:bg-slate-900/60 hover:-translate-y-1 group-hover:shadow-2xl shadow-emerald-900/5 h-full flex flex-col justify-between">
-                                 <div>
-                                    <div className="flex justify-between items-start mb-6">
-                                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-black/20">
-                                       {edu.logo ? (
-                                          <img src={edu.logo} alt={edu.institution} className="w-full h-full object-contain" />
-                                       ) : (
-                                          <span className="font-bold text-xl font-mono text-emerald-400">{idx + 1}</span>
+                           {/* Timeline Dot */}
+                           <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-slate-900 border-2 border-emerald-500 rounded-full transform -translate-x-1/2 mt-6 z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                              <div className="absolute inset-0 bg-emerald-500/50 rounded-full animate-pulse" />
+                           </div>
+
+                           {/* Content Card */}
+                           <div className={`ml-12 md:ml-0 md:w-1/2 ${isLeft ? "md:pr-12 md:text-right" : "md:pl-12"}`}>
+                              <div className="group relative">
+                                 {/* Card Glow */}
+                                 <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
+                                 
+                                 <div className={`bg-slate-900/40 backdrop-blur-md border border-slate-800 p-6 rounded-2xl relative hover:border-emerald-500/30 transition-all duration-300 hover:bg-slate-900/60 hover:-translate-y-1 group-hover:shadow-xl shadow-emerald-900/5 ${isLeft ? "md:items-end" : ""}`}>
+                                    
+                                    {/* Header: Year & Logo */}
+                                    <div className={`flex items-center gap-4 mb-4 ${isLeft ? "md:flex-row-reverse" : "flex-row"}`}>
+                                       <span className="text-xs font-mono text-emerald-400 bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                          {edu.year}
+                                       </span>
+                                       <div className="flex-1 h-px bg-slate-800" />
+                                       {edu.logo && (
+                                          <div className="w-20 h-20 rounded-xl bg-white/5 p-2 flex items-center justify-center border border-white/10">
+                                             <img src={edu.logo} alt={edu.institution} className="w-full h-full object-contain" />
+                                          </div>
                                        )}
                                     </div>
-                                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                                      {edu.year}
-                                    </span>
+
+                                    <h3 className="text-xl font-bold text-slate-100 mb-1 group-hover:text-emerald-300 transition-colors">
+                                       {edu.degree}
+                                    </h3>
+                                    <p className="text-slate-400 text-sm font-medium mb-4">{edu.institution}</p>
+                                    
+                                    {edu.result && (
+                                       <div className={`inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/5 rounded-lg border border-emerald-500/10 ${isLeft ? "md:flex-row-reverse" : ""}`}>
+                                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.8)]" />
+                                          <p className="text-emerald-400 text-sm font-semibold tracking-wide">{edu.result}</p>
+                                       </div>
+                                    )}
+
                                  </div>
-
-                                    <h3 className="text-xl font-bold text-slate-100 mb-2 group-hover:text-emerald-300 transition-colors">{edu.degree}</h3>
-                                    <p className="text-slate-400 text-sm font-medium">{edu.institution}</p>
-                                 </div>
-                                 
-                                 {edu.result && (
-                                    <div className="mt-4 pt-3 border-t border-slate-800/50 flex items-center gap-2">
-                                       <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.8)]" />
-                                       <p className="text-emerald-400 text-sm font-semibold tracking-wide">{edu.result}</p>
-                                    </div>
-                                 )}
-
-                                 {/* CONNECTORS (Desktop Only) */}
-                                 {/* 1 -> 2: Right of 1 connects to Left of 2 */}
-                                 {idx === 0 && (
-                                    <div className="hidden md:block absolute top-1/2 -right-10 w-12 h-[2px] bg-gradient-to-r from-emerald-500/20 to-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.4)] z-0" />
-                                 )}
-                                 
-                                 {/* 2 -> 3: Bottom of 2 connects to Top of 3 (Vertical Center) */}
-                                 {idx === 1 && (
-                                    <div className="hidden md:block absolute top-[calc(100%-2rem)] left-1/2 w-[2px] h-[calc(3rem+4rem)] bg-gradient-to-b from-emerald-500/20 to-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.4)] -z-10" />
-                                 )}
-
-                                 {/* 3 -> 4: Left of 3 connects to Right of 4 */}
-                                 {idx === 2 && (
-                                    <div className="hidden md:block absolute top-1/2 -left-10 w-12 h-[2px] bg-gradient-to-l from-emerald-500/20 to-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.4)] z-0" />
-                                 )}
-
                               </div>
                            </div>
+                           
+                           {/* Empty side for desktop balance */}
+                           <div className="hidden md:block md:w-1/2" />
+                           
                         </motion.div>
                       );
                    })}
