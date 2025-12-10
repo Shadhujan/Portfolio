@@ -5,6 +5,7 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { aboutData } from "@/lib/portfolioData";
+import GlitchText from "../components/hero-effects/GlitchText";
 
 export default function AboutPage() {
   return (
@@ -95,18 +96,24 @@ export default function AboutPage() {
                       return (
                         <motion.div
                            key={idx}
-                           initial={{ opacity: 0, y: 50 }}
-                           whileInView={{ opacity: 1, y: 0 }}
+                           initial={{ opacity: 0, x: isLeft ? -100 : 100 }}
+                           whileInView={{ opacity: 1, x: 0 }}
                            viewport={{ once: true, margin: "-100px" }}
-                           transition={{ duration: 0.5, delay: idx * 0.1 }}
+                           transition={{ duration: 0.7, ease: "easeOut", delay: idx * 0.2 }}
                            className={`relative flex flex-col md:flex-row gap-8 ${
                               isLeft ? "md:flex-row-reverse" : ""
                            }`}
                         >
                            {/* Timeline Dot */}
-                           <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-slate-900 border-2 border-emerald-500 rounded-full transform -translate-x-1/2 mt-6 z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]">
-                              <div className="absolute inset-0 bg-emerald-500/50 rounded-full animate-pulse" />
-                           </div>
+                           <motion.div 
+                              initial={{ scale: 0, opacity: 0 }}
+                              whileInView={{ scale: 1, opacity: 1 }}
+                              transition={{ duration: 0.5, delay: (idx * 0.2) + 0.5 }}
+                              className="absolute left-4 md:left-1/2 w-4 h-4 bg-slate-900 border-2 border-emerald-500 rounded-full transform -translate-x-1/2 mt-6 z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                           >
+                              <div className="absolute inset-0 bg-emerald-500/50 rounded-full animate-ping opacity-75" />
+                              <div className="absolute inset-0 bg-emerald-400 rounded-full animate-pulse" />
+                           </motion.div>
 
                            {/* Content Card */}
                            <div className={`ml-12 md:ml-0 md:w-1/2 ${isLeft ? "md:pr-12 md:text-right" : "md:pl-12"}`}>
@@ -187,17 +194,28 @@ export default function AboutPage() {
                    whileHover={{ y: -5 }}
                    className="md:col-span-1 md:row-span-2 relative group overflow-hidden rounded-3xl bg-amber-950/20 border border-amber-500/20"
                 >
-                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/80" />
-                   <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                   </div>
+                   <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2690&auto=format&fit=crop')] bg-cover bg-center opacity-60 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                   
+
+
                    <div className="absolute bottom-0 left-0 p-6 w-full">
-                      <h3 className="text-xl font-bold text-amber-100 mb-2">Reading</h3>
-                      <p className="text-sm text-amber-200/70 mb-4">Tech blogs, Sci-Fi, & AI Research.</p>
-                      <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                         <div className="h-full w-2/3 bg-amber-500" />
+                      <h3 className="text-2xl font-bold text-white mb-2">Reading</h3>
+                      <p className="text-sm text-slate-300/90 mb-6 font-medium">Downloading knowledge from Tech blogs, Research papers and Books.</p>
+                      
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xs font-mono text-amber-400">READING_LIST.md</span>
+                        <div className="h-px flex-1 bg-slate-700" />
+                        <span className="text-xs font-mono text-amber-400">85%</span>
                       </div>
-                      <p className="text-[10px] text-slate-500 mt-2 text-right">65% Progress</p>
+                      <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                         <motion.div 
+                            initial={{ width: "0%" }}
+                            whileInView={{ width: "85%" }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="h-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" 
+                         />
+                      </div>
                    </div>
                 </motion.div>
 
@@ -262,28 +280,107 @@ export default function AboutPage() {
                    whileHover={{ scale: 1.02 }}
                    className="md:col-span-1 md:row-span-1 relative group overflow-hidden rounded-3xl bg-cyan-950/30 border border-cyan-500/20"
                 >
-                   <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop')] bg-cover bg-center opacity-50 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-[url('/profile/Travel.PNG')] bg-cover bg-center opacity-50 group-hover:scale-110 transition-transform duration-700" />
                    <div className="absolute inset-0 bg-slate-950/40 hover:bg-slate-950/20 transition-colors" />
                    <div className="absolute inset-0 flex items-center justify-center">
                        <h3 className="text-2xl font-bold text-white drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Travel</h3>
                    </div>
                 </motion.div>
 
+                {/* Chess - Wide (2x1) */}
+                <motion.div 
+                   whileHover={{ scale: 1.02 }}
+                   className="md:col-span-2 md:row-span-1 relative group overflow-hidden rounded-3xl bg-slate-900/40 border border-slate-700/30"
+                >
+                   <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586165368502-1bad197a6461?q=80&w=2658&auto=format&fit=crop')] bg-cover bg-center opacity-50 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 to-transparent" />
+                   <div className="absolute inset-0 flex flex-col justify-center p-8">
+                       <div className="bg-slate-500/20 p-3 rounded-xl inline-block mb-4 backdrop-blur-md border border-slate-500/30 text-slate-300 w-fit">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11.7 3a17 17 0 0 0-2.5 11.3c2.3 3.3 5.4 6 9.3 7.7"/><path d="M3 21h18v-2H3v2z"/><path d="M5 21v-2a13.8 13.8 0 0 0 3-11.5A7.4 7.4 0 0 1 12 3.6a7.4 7.4 0 0 1 4 3.9A13.8 13.8 0 0 0 19 19v2"/></svg>
+                       </div>
+                       <h3 className="text-2xl font-bold text-white mb-2">Chess</h3>
+                       <p className="text-slate-300 max-w-sm">Thinking 5 moves ahead, then losing in one.</p>
+                   </div>
+                </motion.div>
+
+                {/* Movies - Standard (1x1) */}
+                <motion.div 
+                   whileHover={{ scale: 1.02 }}
+                   className="md:col-span-1 md:row-span-1 relative group overflow-hidden rounded-3xl bg-red-950/30 border border-red-500/20"
+                >
+                   <div className="absolute inset-0 bg-[url('/profile/batman.png')] bg-cover bg-center opacity-50 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+                   <div className="absolute inset-0 flex flex-col justify-end items-start p-8 text-left">
+                       <h3 className="text-2xl font-bold text-white mb-2">Cinema</h3>
+                       <p className="text-slate-300 max-w-sm">Reality is overrated. Follow the white rabbit.</p>
+                   </div>
+                </motion.div>
+
+                {/* Anime - Standard (1x1) */}
+                <motion.div 
+                   whileHover={{ scale: 1.02 }}
+                   className="md:col-span-1 md:row-span-1 relative group overflow-hidden rounded-3xl bg-pink-950/30 border border-pink-500/20"
+                >
+                   <div className="absolute inset-0 bg-[url('/profile/luffy.png')] bg-cover bg-center opacity-50 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                   <div className="absolute inset-0 flex flex-col justify-end p-8">
+
+                       <h3 className="text-2xl font-bold text-white mb-2">Anime</h3>
+                       <p className="text-slate-300 max-w-sm">Learning Japanese one subtitle at a time.</p>
+                   </div>
+                </motion.div>
+
              </div>
 
              {/* Ticker for Interests */}
-             <div className="mt-8 border-y border-slate-900 bg-slate-950/50 py-4 overflow-hidden relative">
-                <div className="flex gap-12 animate-scroll whitespace-nowrap">
-                   {/* Duplicating for infinite scroll illusion - minimal implementation */}
-                   {[...aboutData.interests, ...aboutData.interests, ...aboutData.interests].map((item: any, i) => (
-                      <div key={i} className="flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
-                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                         <span className="text-sm font-semibold tracking-wider uppercase text-slate-300">{item.title}</span>
-                      </div>
-                   ))}
+
+             {/* Ticker for Interests */}
+             <div className="mt-8 border-y border-slate-900 bg-slate-950/50 py-4 overflow-hidden relative group">
+                {/* Gradient Masks */}
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
+                
+                <div className="flex select-none gap-0">
+                  <motion.div 
+                     className="flex gap-16 whitespace-nowrap pr-16"
+                     animate={{ x: "-100%" }}
+                     transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
+                  >
+                     {/* Repeat enough times to fill screen + buffer */}
+                     {[...Array(8)].map((_, i) => (
+                        <div key={i} className="flex gap-16">
+                           {aboutData.interests.map((item: any, idx: number) => (
+                               <div key={idx} className="flex items-center gap-3 opacity-70 group-hover:opacity-100 transition-opacity">
+                                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                  <span className="text-sm font-semibold tracking-wider uppercase text-slate-300">
+                                    {item.title}
+                                  </span>
+                               </div>
+                           ))}
+                        </div>
+                     ))}
+                  </motion.div>
+
+                  <motion.div 
+                     className="flex gap-16 whitespace-nowrap pr-16"
+                     animate={{ x: "-100%" }}
+                     transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
+                  >
+                      {/* Duplicate set for loop continuity */}
+                     {[...Array(8)].map((_, i) => (
+                        <div key={i} className="flex gap-16">
+                           {aboutData.interests.map((item: any, idx: number) => (
+                               <div key={idx} className="flex items-center gap-3 opacity-70 group-hover:opacity-100 transition-opacity">
+                                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                  <span className="text-sm font-semibold tracking-wider uppercase text-slate-300">
+                                    {item.title}
+                                  </span>
+                               </div>
+                           ))}
+                        </div>
+                     ))}
+                  </motion.div>
                 </div>
-                <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-slate-950 to-transparent pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />
              </div>
           </section>
 
