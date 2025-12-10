@@ -112,12 +112,73 @@ export default function HomePage() {
         </section>
 
         {/* About */}
-        <section id="about" className="border-b border-slate-900">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <h2 className="text-xl font-semibold mb-3">About</h2>
-            <p className="text-sm text-slate-300 max-w-2xl">
-              {aboutData.summary}
-            </p>
+        {/* About: Magazine Style */}
+        <section id="about" className="border-b border-slate-900 bg-slate-950 py-20 overflow-hidden">
+          <div className="max-w-6xl mx-auto px-4">
+             <div className="grid md:grid-cols-[1fr_1.5fr] gap-12 sm:gap-16 items-center">
+                
+                {/* Image Column */}
+                <motion.div 
+                   initial={{ opacity: 0, x: -30 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true }}
+                   className="relative group"
+                >
+                   {/* Decorative Frame */}
+                   <div className="absolute -inset-4 border-2 border-slate-800 rounded-lg translate-x-3 translate-y-3 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
+                   <div className="absolute -inset-4 border border-emerald-500/20 rounded-lg -translate-x-2 -translate-y-2 group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
+                   
+                   {/* Image Container */}
+                   <div className="relative aspect-[3/4] overflow-hidden rounded-lg grayscale hover:grayscale-0 transition-all duration-700 ease-in-out shadow-2xl">
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10 opactiy-60" />
+                      {/* Using standard img tag for simplicity with external/local assets, can specificy Next/Image if needed but path is raw */}
+                      <img 
+                        src="/profile/profile 4 to 3.jpg" 
+                        alt="Shadhujan Jeyachandran" 
+                        className="object-cover w-full h-full scale-105 group-hover:scale-100 transition-transform duration-700"
+                      />
+                      
+                      {/* Floating Badge */}
+                      <div className="absolute bottom-6 left-6 z-20">
+                         <span className="bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 uppercase tracking-widest mb-1 inline-block">
+                           Editor's Pick
+                         </span>
+                         <p className="text-white font-serif text-lg italic opacity-90">
+                           "Engineering with soul."
+                         </p>
+                      </div>
+                   </div>
+                </motion.div>
+
+                {/* Text Column */}
+                <motion.div
+                   initial={{ opacity: 0, y: 30 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   className="relative"
+                >
+                   <h2 className="text-5xl sm:text-7xl font-serif text-slate-100 font-bold leading-[0.9] mb-8 tracking-tighter">
+                      THE <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
+                        CREATIVE
+                      </span> <br />
+                      MINDSET.
+                   </h2>
+
+                   <div className="prose prose-invert prose-lg text-slate-400 relative">
+                      <p className="lead border-l-4 border-emerald-500 pl-6 italic text-xl text-slate-300 mb-6">
+                        "I believe that the best code isn't just written—it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
+                      </p>
+                      <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:font-serif first-letter:text-slate-100">
+                        Based in Colombo, Sri Lanka, I bridge the gap between complex backend architecture and intuitive user experiences. My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
+                      </p>
+                      <p>
+                        Whether designing event-driven microservices or polishing a UI until it gleams, I bring a holistic perspective to every project.
+                      </p>
+                   </div>
+                </motion.div>
+
+             </div>
           </div>
         </section>
 

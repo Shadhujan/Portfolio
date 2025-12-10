@@ -13,9 +13,44 @@ export const aboutData = {
   linkedin: "https://lk.linkedin.com/in/shadhujan",
   medium: "https://shadhujan.medium.com/",
   instagram: "https://www.instagram.com/jeya.shad38",
-  // website: "https://mdatazone.com/", // Removed per user request
   featuredProject: "https://cis-bunona-game.netlify.app/",
   email: "jeya38shadhujan@gmail.com",
+  hobbies: [
+    {
+      icon: "gaming", 
+      title: "Gaming",
+      description: "Strategizing in competitive games and exploring immersive open worlds."
+    },
+    {
+      icon: "reading",
+      title: "Reading", 
+      description: "Tech blogs, sci-fi novels, and keeping up with the latest in AI."
+    },
+    {
+      icon: "music",
+      title: "Music",
+      description: "Lo-fi beats for coding and high-energy tracks for workouts."
+    },
+     {
+      icon: "travel",
+      title: "Travel",
+      description: "Exploring new places and experiencing different cultures provided new perspectives."
+    }
+  ],
+  interests: [
+    {
+       title: "AI Agents",
+       description: "Building autonomous systems that can reason and act."
+    },
+    {
+       title: "Cloud Native",
+       description: "Designing scalable, resilient microservices on Kubernetes."
+    },
+    {
+       title: "UI/UX Design",
+       description: "Crafting intuitive and accessible user experiences."
+    }
+  ]
 };
 
 export const projectsData = [

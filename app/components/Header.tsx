@@ -33,7 +33,7 @@ export default function Header() {
            </Link>
         </div>
         <nav className="hidden sm:flex gap-6 text-xs text-slate-300">
-          <Link href={getLink("about")} className="hover:text-emerald-400">
+          <Link href="/about" className="hover:text-emerald-400">
             About
           </Link>
           <Link href={getLink("projects")} className="hover:text-emerald-400">
