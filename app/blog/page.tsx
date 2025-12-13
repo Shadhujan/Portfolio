@@ -9,11 +9,10 @@ import { useMediumArticles } from "@/hooks/useMediumArticles";
 export default function BlogPage() {
   const { articles, loading, error, extractImage } = useMediumArticles();
 
-  // Helper to strip HTML tags for description if needed, or use description as is if clean
+  // Helper to strip HTML tags for description
   const stripHtml = (html: string) => {
-    const tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    if (!html) return "";
+    return html.replace(/<[^>]*>?/gm, "");
   };
 
   return (
@@ -49,7 +48,13 @@ export default function BlogPage() {
 
             {!loading && !error && (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {articles.map((article, idx) => (
+                {articles.map((article, idx) => {
+                   const cleanDescription = stripHtml(article.description);
+                   const truncatedDescription = cleanDescription.length > 150 
+                      ? cleanDescription.substring(0, 150) + "..." 
+                      : cleanDescription;
+
+                   return (
                   <motion.article
                     key={article.guid}
                     initial={{ opacity: 0, y: 20 }}
@@ -98,11 +103,10 @@ export default function BlogPage() {
                         {article.title}
                       </h2>
                       
-                      {/* We use a truncated description or content snippet */}
-                       <div 
-                         className="text-sm text-slate-400 mb-4 line-clamp-3"
-                         dangerouslySetInnerHTML={{ __html:  article.description ? (article.description.length > 150 ? article.description.substring(0, 150) + "..." : article.description) : "" }}
-                       />
+                      {/* Truncated clean description */}
+                       <p className="text-sm text-slate-400 mb-4 line-clamp-3">
+                          {truncatedDescription}
+                       </p>
 
                       <div className="mt-auto pt-4 border-t border-slate-800/50 flex items-center justify-between">
                          <span className="text-xs text-slate-500 font-medium">Read on Medium</span>
@@ -121,7 +125,8 @@ export default function BlogPage() {
                       <span className="sr-only">Read {article.title}</span>
                     </a>
                   </motion.article>
-                ))}
+                   );
+                })}
               </div>
             )}
             
