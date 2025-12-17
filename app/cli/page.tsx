@@ -122,6 +122,7 @@ export default function CLIPortfolioPage() {
           "  cat <file>                 Show file content.",
           "  analyze-skills --json      Show skills as JSON.",
           "  skills                     Show readable skills list.",
+          "  version                    Show version info.",
           "  clear                      Clear the screen.",
           "  exit                       Close CLI and go to normal portfolio.",
         ];
@@ -232,7 +233,7 @@ export default function CLIPortfolioPage() {
         } else if (target === "README.md") {
            if (cwd === "~") {
               output = [
-                "# Portfolio CLI v1.0.0",
+                `# Portfolio CLI ${aboutData.version}`,
                 "Welcome to my interactive portfolio terminal.",
                 "Use standard commands like 'ls', 'cd', 'cat', and 'whoami' to navigate.",
                 "",
@@ -341,6 +342,11 @@ export default function CLIPortfolioPage() {
             "Usage: analyze-skills --json or analyze-skills --json-output",
           ];
         }
+        break;
+      }
+
+      case "version": {
+        output = [aboutData.version];
         break;
       }
 
@@ -507,7 +513,7 @@ export default function CLIPortfolioPage() {
               <strong className="font-bold">Ctrl+L</strong> or type{" "}
               <strong className="font-bold">clear</strong> to clean screen
             </span>
-            <span>v1.0.0</span>
+            <span>{aboutData.version}</span>
           </div>
         </div>
       </div>
