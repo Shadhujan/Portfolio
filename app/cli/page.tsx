@@ -86,6 +86,11 @@ export default function CLIPortfolioPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
 
+  // Auto-focus on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   const handleWrapperClick = () => {
     inputRef.current?.focus();
   };
@@ -471,6 +476,7 @@ export default function CLIPortfolioPage() {
             <div className="flex-1 relative">
               <input
                 ref={inputRef}
+                autoFocus
                 className="w-full bg-transparent focus:outline-none caret-transparent text-slate-100"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
