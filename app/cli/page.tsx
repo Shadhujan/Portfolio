@@ -317,6 +317,9 @@ export default function CLIPortfolioPage() {
           "Tools:",
           "  - " + skillsData.tools.join("\n  - "),
           "",
+          "Machine Learning:",
+          "  - " + (skillsData.machineLearning?.join("\n  - ") || ""),
+          "",
           "Architecture:",
           "  - " + (skillsData.architecture?.join("\n  - ") || ""),
         ];

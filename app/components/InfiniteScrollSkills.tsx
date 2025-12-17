@@ -11,6 +11,7 @@ interface InfiniteScrollSkillsProps {
     databases: string[];
     devops: string[];
     tools: string[];
+    machineLearning?: string[];
     architecture?: string[];
   };
 }
@@ -22,14 +23,18 @@ const SkillCard = ({ skill }: { skill: string }) => {
     displayIconClass += " colored";
   }
 
-  const isCustomImage = iconClass.startsWith("/");
+  const isCustomImage = iconClass.startsWith("/") || iconClass.startsWith("http");
   const isGeneric = iconClass.includes("devicon-devicon-plain");
 
   return (
     <div className="flex items-center gap-3 px-6 py-3 bg-slate-900/50 border border-slate-800 rounded-full min-w-max hover:border-emerald-500/50 hover:bg-slate-800 transition-colors group">
       <div className="w-8 h-8 flex items-center justify-center">
         {isCustomImage ? (
-          <img src={iconClass} alt={skill} className="w-6 h-6 object-contain" />
+          <img 
+            src={iconClass} 
+            alt={skill} 
+            className={`object-contain ${skill === "OpenAI" ? "w-8 h-8 invert p-0.5" : skill === "Render" ? "w-6 h-6 invert" : "w-6 h-6"}`} 
+          />
         ) : isGeneric ? (
           <span className="text-xs font-bold text-slate-400 group-hover:text-emerald-400 transition-colors">
             {skill.slice(0, 2).toUpperCase()}
@@ -59,11 +64,12 @@ const ScrollRow = ({
   // Duplicate items to ensure seamless loop
   const displayItems = [...items, ...items, ...items, ...items];
 
-  // Calculate duration based on item count to ensure consistent speed
-  // The animation moves 50% of the width (which corresponds to 2 sets of items)
-  // We want a constant speed of X seconds per item.
-  // 30s per item ensures it's very slow and consistent.
-  const duration = `${items.length * 30}s`;
+  // Calculate duration based on approximate content width to ensure consistent visual speed
+  // "Machine Learning" (5 items, mixed length) felt right at ~25s.
+  // We approximate width as (charCount * 1 + baseWidthPerItem * 6).
+  // Factor 0.4 derives from calibrating against the ML section.
+  const contentFactor = items.reduce((acc, item) => acc + item.length + 6, 0);
+  const duration = `${Math.max(contentFactor * 0.4, 20)}s`;
 
   return (
     <div className="relative flex overflow-hidden w-full pause-on-hover py-2">
@@ -133,7 +139,19 @@ const InfiniteScrollSkills = ({ skillsData }: InfiniteScrollSkillsProps) => {
         <ScrollRow items={skillsData.tools} direction="left" />
       </div>
 
-      {/* 7. Architecture */}
+      {/* 7. Machine Learning */}
+      {skillsData.machineLearning && (
+        <div>
+          <div className="flex items-center gap-4 mb-2 px-4">
+             <span className="h-[1px] bg-slate-800 flex-1"></span>
+             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Machine Learning</span>
+             <span className="h-[1px] bg-slate-800 flex-1"></span>
+          </div>
+          <ScrollRow items={skillsData.machineLearning} direction="right" />
+        </div>
+      )}
+
+      {/* 8. Architecture */}
       {skillsData.architecture && (
         <div>
           <div className="flex items-center gap-4 mb-2 px-4">
@@ -141,7 +159,7 @@ const InfiniteScrollSkills = ({ skillsData }: InfiniteScrollSkillsProps) => {
              <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.2em] animate-pulse">Architecture</span>
              <span className="h-[1px] bg-emerald-900/40 flex-1"></span>
           </div>
-          <ScrollRow items={skillsData.architecture} direction="right" />
+          <ScrollRow items={skillsData.architecture} direction="left" />
         </div>
       )}
     </div>

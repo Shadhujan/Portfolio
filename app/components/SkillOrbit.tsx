@@ -21,7 +21,7 @@ const SkillNode = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const isGeneric = iconClass.includes("devicon-devicon-plain");
-  const isCustomImage = iconClass.startsWith("/");
+  const isCustomImage = iconClass.startsWith("/") || iconClass.startsWith("http");
 
   return (
     <group position={position}>
@@ -41,7 +41,11 @@ const SkillNode = ({
             `}
           >
             {isCustomImage ? (
-              <img src={iconClass} alt={label} className="w-8 h-8 object-contain" />
+              <img 
+                src={iconClass} 
+                alt={label} 
+                className={`w-8 h-8 object-contain ${label === "OpenAI" || label === "Render" ? "invert" : ""}`} 
+              />
             ) : isGeneric ? (
               <span className="text-sm font-bold text-slate-300 select-none">{label.slice(0, 2).toUpperCase()}</span>
             ) : (

@@ -183,7 +183,11 @@ export const skillsData = {
     "MongoDB",
     "MySQL",
     "Supabase",
-    "Redis"
+    "Redis",
+    "SQL",
+    "Firebase",
+    "Oracle",
+    "SQLite"
   ],
   devops: [
     "Docker",
@@ -200,7 +204,22 @@ export const skillsData = {
     "Playwright",
     "Selenium",
     "Adobe Illustrator",
-    "Adobe Photoshop"
+    "Adobe Photoshop",
+    "Figma",
+    "GitHub",
+    "Vercel",
+    "Render",
+    "Netlify",
+    "JIRA",
+    "Trello",
+    "OpenProject"
+  ],
+  machineLearning: [
+    "OpenAI",
+    "HuggingFace",
+    "PyTorch",
+    "Pandas",
+    "NumPy"
   ],
   architecture: [
     "Clean Architecture",
@@ -264,4 +283,23 @@ export const skillIconMap: Record<string, string> = {
   "Three.js": "/icons/threejs.png",
   "Playwright": "/icons/playwright.png",
   "Selenium": "devicon-selenium-original",
+  
+  // New Skills
+  "SQL": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
+  "Firebase": "devicon-firebase-plain",
+  "Oracle": "devicon-oracle-original",
+  "SQLite": "devicon-sqlite-plain",
+  "Figma": "devicon-figma-plain",
+  "GitHub": "devicon-github-plain text-white",
+  "Vercel": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg",
+  "Render": "/icons/render.png", 
+  "Netlify": "/icons/netlify.png",
+  "JIRA": "devicon-jira-plain",
+  "Trello": "devicon-trello-plain",
+  "OpenProject": "/icons/openproject.png",
+  "OpenAI": "/icons/openai.png",
+  "HuggingFace": "/icons/huggingface.png",
+  "PyTorch": "devicon-pytorch-original",
+  "Pandas": "devicon-pandas-original",
+  "NumPy": "devicon-numpy-original",
 };
