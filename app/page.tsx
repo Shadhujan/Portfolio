@@ -194,6 +194,48 @@ export default function HomePage() {
                       <p>
                         My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
                       </p>
+                      
+                      <div className="flex justify-end mt-8">
+                        <Link href="/about">
+                          <motion.svg 
+                            width="45" 
+                            height="24" 
+                            viewBox="0 0 80 24" 
+                            fill="none" 
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-emerald-500 cursor-pointer overflow-visible"
+                            animate={{ 
+                              x: [0, 10, 0], 
+                              filter: [
+                                "drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #10b981)", 
+                                "drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px #10b981)", 
+                                "drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #10b981)"
+                              ],
+                              transition: { 
+                                duration: 2, 
+                                repeat: Infinity, 
+                                ease: "easeInOut" 
+                              }
+                            }}
+                            whileHover={{ 
+                              scale: 1.3, 
+                              x: 0,
+                              filter: "drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #10b981)",
+                              transition: { 
+                                duration: 0.2 
+                              }
+                            }}
+                          >
+                            <path 
+                              d="M0 12H78M78 12L68 2M78 12L68 22" 
+                              stroke="currentColor" 
+                              strokeWidth="1.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                            />
+                          </motion.svg>
+                        </Link>
+                      </div>
                    </div>
                 </motion.div>
 
