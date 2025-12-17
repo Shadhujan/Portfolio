@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="border-t border-slate-900 bg-slate-950">
       <div className="max-w-5xl mx-auto px-4 py-4 text-[11px] text-slate-500 relative flex items-center justify-center">
         <span>
-          v1.171225 | © {new Date().getFullYear()} {aboutData.name}. All rights reserved.
+          {aboutData.version} | © {new Date().getFullYear()} {aboutData.name}. All rights reserved.
         </span>
         <Link
           href="/cli"
