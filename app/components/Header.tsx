@@ -64,7 +64,7 @@ export default function Header() {
           <Link href="/about" className="hover:text-emerald-400">
             About
           </Link>
-          <Link href={getLink("projects")} className="hover:text-emerald-400">
+          <Link href="/projects" className="hover:text-emerald-400">
             Projects
           </Link>
           <Link href={getLink("skills")} className="hover:text-emerald-400">
@@ -123,7 +123,7 @@ export default function Header() {
                     <nav className="flex flex-col p-6 gap-4">
                         {[
                             { label: "About", href: "/about" },
-                            { label: "Projects", href: getLink("projects") },
+                            { label: "Projects", href: "/projects" },
                             { label: "Skills", href: getLink("skills") },
                             { label: "Blog", href: "/blog" },
                             { label: "Contact", href: getLink("contact") },
