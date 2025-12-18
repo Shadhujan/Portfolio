@@ -102,6 +102,37 @@ export const projectsData = [
     liveUrl: "https://cis-bunona-game.netlify.app/",
   },
   {
+    id: "focus-boost",
+    name: "FocusBoost: AI Study Companion",
+    description: "AI-powered study assistant that monitors attention via webcam and triggers adaptibe interventions (quizzes/hints) using Gemini AI when focus wanes. Privacy-first design.",
+    tech: ["React", "TypeScript", "Python", "FastAPI", "OpenCV", "Gemini API", "Firebase"],
+    url: "https://github.com/Shadhujan/FocusBoost",
+  },
+  {
+    id: "3d-dojo",
+    name: "3D Interactive Dojo",
+    description: "Immersive 3D web experience template built with React Three Fiber. Features first-person navigation, interactive elements, and optimized GLB model loading.",
+    tech: ["React", "Three.js", "Tailwind CSS", "R3F"],
+    url: "https://github.com/Shadhujan/3D_Interactive_Dojo",
+    liveUrl: "https://3d-dojo-shad.vercel.app",
+  },
+  {
+    id: "glb-viewer",
+    name: "GLB Model Viewer",
+    description: "Web-based utility for previewing and inspecting GLB 3D models directly in the browser. Useful for rapid asset verification.",
+    tech: ["React", "Three.js", "TypeScript"],
+    url: "https://github.com/Shadhujan/GLB-Viewer",
+    liveUrl: "https://glb-viewer-shad.vercel.app/",
+  },
+  {
+    id: "oop-masterguide",
+    name: "The OOP MasterGuide",
+    description: "Interactive educational website explaining OOP principles and Design Patterns with visual diagrams and code snippets. Focus on clear, accessible explanations.",
+    tech: ["HTML", "CSS", "JavaScript", "HCI"],
+    url: "https://github.com/Shadhujan/OOP-MasterGuide",
+    liveUrl: "https://shadhujan.github.io/OOP-MasterGuide/",
+  },
+  {
     id: "snake-game",
     name: "Multiplayer Snake Game",
     description:
@@ -140,6 +171,27 @@ export const projectsData = [
       "Facial emotion detection experiments using Flask, OpenCV and FER-2013 style datasets. Mix of baseline models and emergent approaches for affective computing.",
     tech: ["Python", "Flask", "OpenCV", "Machine Learning"],
     url: "https://github.com/Shadhujan/FacialEmotionDetaction",
+  },
+  {
+    id: "hinata-toyshop",
+    name: "Hinata Toyshop",
+    description: "E-commerce website for an anime store. Features product browsing, cart functionality, and user accounts. Built as a first university project.",
+    tech: ["PHP", "HTML", "CSS", "JavaScript", "SQL"],
+    url: "https://github.com/Shadhujan/Hinata_Toyshop",
+  },
+  {
+    id: "lr-platinum",
+    name: "LR Platinum Tire Web",
+    description: "Web application for a tire service center. Handles service listings and basic business information.",
+    tech: ["PHP", "CSS", "HTML"],
+    url: "https://github.com/Shadhujan/LR-Platinum-Tire-Web",
+  },
+  {
+    id: "file-storage",
+    name: "File Storage System",
+    description: "Backend exploration of file storage mechanisms using Python and C++ components for performance.",
+    tech: ["Python", "C++"],
+    url: "https://github.com/Shadhujan/file-storage",
   },
 ];
 
