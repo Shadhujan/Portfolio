@@ -55,7 +55,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-slate-900 border border-slate-800 w-full max-w-3xl max-h-[85vh] rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden text-left"
+              className="bg-slate-900 border border-slate-800 w-full max-w-3xl max-h-[82vh] rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden text-left"
             >
               {/* Header */}
               <div className="p-6 border-b border-slate-800 bg-slate-900/50 flex justify-between items-start shrink-0 relative">

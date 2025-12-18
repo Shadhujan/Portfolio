@@ -2,6 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ProjectModal from "./components/ProjectModal";
+
+// Define Project interface locally if not exported centrally yet
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  tech: string[];
+  url?: string;
+  liveUrl?: string;
+  longDescription?: string;
+  features?: string[];
+}
 import { motion } from "framer-motion";
 import {
   aboutData,
@@ -22,6 +35,7 @@ import ContactSection from "./components/ContactSection";
 export default function HomePage() {
   const [is3DView, setIs3DView] = useState(true);
   const [visibleProjects, setVisibleProjects] = useState(4);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -257,7 +271,8 @@ export default function HomePage() {
               {projectsData.slice(0, visibleProjects).map((project, idx) => (
                 <motion.div
                   key={project.id}
-                  className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 hover:border-emerald-400/70 transition relative overflow-hidden"
+                  onClick={() => setSelectedProject(project)}
+                  className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 hover:border-emerald-400/70 transition relative overflow-hidden cursor-pointer"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
@@ -284,24 +299,26 @@ export default function HomePage() {
                     ))}
                   </div>
                   {project.url && (
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative mr-4"
+                    <span
+                      onClick={(e) => {
+                         e.stopPropagation();
+                         window.open(project.url, '_blank');
+                      }}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative mr-4 cursor-pointer"
                     >
                       View Code
-                    </a>
+                    </span>
                   )}
                   {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative"
+                    <span
+                      onClick={(e) => {
+                         e.stopPropagation();
+                         window.open(project.liveUrl, '_blank');
+                      }}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative cursor-pointer"
                     >
                       Live Demo
-                    </a>
+                    </span>
                   )}
                 </motion.div>
               ))}
@@ -330,6 +347,12 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <ProjectModal 
+          project={selectedProject} 
+          isOpen={!!selectedProject} 
+          onClose={() => setSelectedProject(null)} 
+        />
 
         {/* Skills with toggle */}
         <section id="skills" className="border-b border-slate-900">
