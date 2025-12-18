@@ -107,6 +107,14 @@ export const projectsData = [
     description: "AI-powered study assistant that monitors attention via webcam and triggers adaptibe interventions (quizzes/hints) using Gemini AI when focus wanes. Privacy-first design.",
     tech: ["React", "TypeScript", "Python", "FastAPI", "OpenCV", "Gemini API", "Firebase"],
     url: "https://github.com/Shadhujan/FocusBoost",
+    longDescription: "FocusBoost is an intelligent study assistant developed as a Final Year Computer Science project. It is designed to address the challenge of maintaining student engagement during remote or digital learning. By leveraging computer vision and Generative AI, the system monitors a student's attention and emotional state in real-time via a webcam. When the system detects waning attention, boredom, or frustration, FocusBoost dynamically intervenes—generating personalized quizzes using Google's Gemini AI to re-engage the learner, or offering helpful hints and encouragement. This project demonstrates the practical application of affective computing and large language models in an educational context.",
+    features: [
+      "Real-time Attention Tracking: Non-intrusive computer vision pipeline using OpenCV and MediaPipe.",
+      "Adaptive Learning Loop: 'Intervention Engine' tracks states like Focus, Distracted, or Fatigued.",
+      "Generative AI Integration: Uses Google Gemini Pro to create context-aware quizzes on-the-fly.",
+      "Full-Stack Architecture: React (Vite) SPA backed by a high-performance FastAPI (Python) server.",
+      "Real-time Data Sync: Integrated Firebase Firestore for session data synchronization."
+    ]
   },
   {
     id: "3d-dojo",

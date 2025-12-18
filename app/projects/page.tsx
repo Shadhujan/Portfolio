@@ -5,8 +5,22 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { projectsData } from "@/lib/portfolioData";
 import { useState } from "react";
+import ProjectModal from "../components/ProjectModal";
+
+// Define a simple Project interface for state type safety
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  tech: string[];
+  url?: string;
+  liveUrl?: string;
+  longDescription?: string;
+  features?: string[];
+}
 
 export default function ProjectsPage() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   // Optional: Filter state if we want to add categories later
   // const [filter, setFilter] = useState("all");
 
@@ -57,7 +71,9 @@ export default function ProjectsPage() {
                 {projectsData.map((project, idx) => (
                   <motion.div
                     key={project.id}
-                    className="group rounded-2xl border border-slate-800 bg-slate-900/50 p-6 hover:border-emerald-500/30 transition-all duration-300 hover:bg-slate-900/80 hover:-translate-y-1 relative overflow-hidden flex flex-col h-full"
+                    layoutId={`project-${project.id}`} // For potential shared layout animation
+                    onClick={() => setSelectedProject(project)}
+                    className="group rounded-2xl border border-slate-800 bg-slate-900/50 p-6 hover:border-emerald-500/30 transition-all duration-300 hover:bg-slate-900/80 hover:-translate-y-1 relative overflow-hidden flex flex-col h-full cursor-pointer"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
@@ -102,26 +118,29 @@ export default function ProjectsPage() {
                     {/* Actions */}
                     <div className="flex items-center gap-4 mt-auto relative z-10">
                       {project.url && (
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+                        <span
+                          onClick={(e) => {
+                             e.stopPropagation(); // Prevent opening modal when clicking link
+                             window.open(project.url, '_blank');
+                          }}
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors z-20 cursor-pointer"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                           Code
-                        </a>
+                        </span>
                       )}
+
                       {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors ml-auto"
+                        <span
+                          onClick={(e) => {
+                             e.stopPropagation();
+                             window.open(project.liveUrl, '_blank');
+                          }}
+                          className="flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors ml-auto z-20 cursor-pointer"
                         >
                           Live Demo
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                        </a>
+                        </span>
                       )}
                     </div>
 
@@ -132,6 +151,13 @@ export default function ProjectsPage() {
         </section>
 
       </main>
+
+       <ProjectModal 
+          project={selectedProject} 
+          isOpen={!!selectedProject} 
+          onClose={() => setSelectedProject(null)} 
+       />
+
       <Footer />
     </div>
   );
