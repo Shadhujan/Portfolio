@@ -21,6 +21,7 @@ import ContactSection from "./components/ContactSection";
 
 export default function HomePage() {
   const [is3DView, setIs3DView] = useState(true);
+  const [visibleProjects, setVisibleProjects] = useState(4);
 
   useEffect(() => {
     const handleResize = () => {
@@ -252,8 +253,8 @@ export default function HomePage() {
                 JSON-driven cards · same data as CLI
               </p>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2">
-              {projectsData.map((project, idx) => (
+            <div className="grid gap-5 sm:grid-cols-2 mb-8">
+              {projectsData.slice(0, visibleProjects).map((project, idx) => (
                 <motion.div
                   key={project.id}
                   className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 hover:border-emerald-400/70 transition relative overflow-hidden"
@@ -304,6 +305,28 @@ export default function HomePage() {
                   )}
                 </motion.div>
               ))}
+            </div>
+
+            {/* See More / Show Less Button */}
+            <div className="flex justify-center">
+               <button
+                  onClick={() => {
+                    if (visibleProjects >= projectsData.length) {
+                       setVisibleProjects(4); // Show Less
+                    } else {
+                       setVisibleProjects(projectsData.length); // Show All
+                    }
+                  }}
+                  className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full border border-slate-700 bg-slate-900 text-slate-300 text-sm font-medium transition-all hover:border-emerald-500/50 hover:text-emerald-400"
+               >
+                  {visibleProjects >= projectsData.length ? "Show Less" : "See More Projects"}
+                  <span className={`transition-transform duration-300 ${visibleProjects >= projectsData.length ? "rotate-180" : ""}`}>
+                    {/* Simple Chevron Down SVG */}
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+               </button>
             </div>
           </div>
         </section>
