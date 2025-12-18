@@ -45,7 +45,7 @@ export const aboutData = {
   instagram: "https://www.instagram.com/jeya.shad38",
   featuredProject: "https://cis-bunona-game.netlify.app/",
   email: "jeya38shadhujan@gmail.com",
-  version: "v1.25.1217",
+  version: "v1.25.1218",
   hobbies: [
     {
       icon: "gaming", 
