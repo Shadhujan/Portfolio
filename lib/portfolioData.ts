@@ -117,11 +117,12 @@ export const projectsData = [
     url: "https://github.com/Shadhujan/FocusBoost",
     longDescription: "FocusBoost is an intelligent study assistant developed as a Final Year Computer Science project. It is designed to address the challenge of maintaining student engagement during remote or digital learning. By leveraging computer vision and Generative AI, the system monitors a student's attention and emotional state in real-time via a webcam. When the system detects waning attention, boredom, or frustration, FocusBoost dynamically intervenes—generating personalized quizzes using Google's Gemini AI to re-engage the learner, or offering helpful hints and encouragement. This project demonstrates the practical application of affective computing and large language models in an educational context.",
     features: [
-      "Real-time Attention Tracking: Non-intrusive computer vision pipeline using OpenCV and MediaPipe.",
-      "Adaptive Learning Loop: 'Intervention Engine' tracks states like Focus, Distracted, or Fatigued.",
-      "Generative AI Integration: Uses Google Gemini Pro to create context-aware quizzes on-the-fly.",
-      "Full-Stack Architecture: React (Vite) SPA backed by a high-performance FastAPI (Python) server.",
-      "Real-time Data Sync: Integrated Firebase Firestore for session data synchronization."
+      "Real-time Attention Tracking: Implemented a non-intrusive computer vision pipeline using OpenCV and MediaPipe to analyze gaze and emotion metrics without storing video data, **ensuring privacy**.",
+      "Custom Trained Models: Developed and trained specialized models using Jupyter Notebooks on Google Colab and Kaggle for robust gaze and emotion detection, ensuring high accuracy in real-time environments.",
+      "Adaptive Learning Loop: Built an 'Intervention Engine' that uses attention data to trigger specific learning aids. It tracks states like 'Focus', 'Distracted', or 'Fatigued' and responds accordingly.",
+      "Generative AI Integration: Utilized Google Gemini Pro to create context-aware quizzes on-the-fly. The system prompts the AI with the child's age, subject, and current attention state to generate questions that are neither too easy nor too hard.",
+      "Full-Stack Architecture: Developed a responsive Single Page Application (SPA) with React (Vite) and TypeScript, backed by a high-performance FastAPI (Python) server.",
+      "Real-time Data Sync: Integrated Firebase Firestore for real-time synchronization of session data, quiz results, and child profiles between the parent dashboard and the child's learning interface."
     ]
   },
   {

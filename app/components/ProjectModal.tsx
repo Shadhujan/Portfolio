@@ -112,7 +112,15 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                         {project.features.map((feature, idx) => (
                            <li key={idx} className="flex gap-3 items-start bg-slate-800/30 p-3 rounded-lg border border-slate-800/50">
                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                             <span className="text-slate-300 text-sm">{feature}</span>
+                             <span className="text-slate-300 text-sm">
+                               {feature.split(/(\*\*.*?\*\*)/).map((part, i) => 
+                                 part.startsWith("**") && part.endsWith("**") ? (
+                                   <strong key={i} className="text-emerald-400 font-semibold">{part.slice(2, -2)}</strong>
+                                 ) : (
+                                   part
+                                 )
+                               )}
+                             </span>
                            </li>
                         ))}
                       </ul>
