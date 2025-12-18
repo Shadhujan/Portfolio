@@ -100,6 +100,14 @@ export const projectsData = [
     ],
     url: "https://github.com/Shadhujan/Bunona",
     liveUrl: "https://cis-bunona-game.netlify.app/",
+    longDescription: "A Number Puzzle game built as a university assignment to explore software design principles like low coupling, high cohesion, event-driven programming, and interoperability. It uses the 'Banana' API for core game logic and leaderboards.The project demonstrates how independent modules (timer, game logic, UI) can work together in a scalable architecture.",
+    features: [
+      "Modular Architecture: High cohesion and low coupling with independent modules for Timer, UI, and Logic.",
+      "Event-Driven Daily Streaks: Rewards based on daily completion events.",
+      "Interoperability: Integration with the external Banana API and leaderboards.",
+      "Virtual Identity: Player lives, achievements, and performance tracking.",
+      "Difficulty System: Timer-based difficulty adjustment without affecting scoring logic."
+    ]
   },
   {
     id: "focus-boost",
@@ -123,6 +131,14 @@ export const projectsData = [
     tech: ["React", "Three.js", "Tailwind CSS", "R3F"],
     url: "https://github.com/Shadhujan/3D_Interactive_Dojo",
     liveUrl: "https://3d-dojo-shad.vercel.app",
+    longDescription: "A 3D interactive web experience template built with React, TypeScript, and React Three Fiber. Originally designed as an immersive personal portfolio, exploring virtual space navigation. Currently serves as a robust base template for 3D web applications, focusing on movement, camera control, scene structure, and dynamic lighting.",
+    features: [
+      "First-Person Navigation: WASD movement controls and mouse-look via pointer lock.",
+      "Modular Scene Structure: Organized architecture for interior and exterior 3D environments.",
+      "Dynamic Lighting: Immersive environment with carefully tuned lighting setups.",
+      "React Ecosystem Integration: Seamless blend of 3D canvas and 2D UI overlays using Tailwind CSS.",
+      "Optimized Assets: efficient handling of GLB models and resources."
+    ]
   },
   {
     id: "glb-viewer",
@@ -131,6 +147,14 @@ export const projectsData = [
     tech: ["React", "Three.js", "TypeScript"],
     url: "https://github.com/Shadhujan/GLB-Viewer",
     liveUrl: "https://glb-viewer-shad.vercel.app/",
+    longDescription: "A professional-grade web utility for inspecting and debugging GLB (glTF 2.0 binary) 3D models. Created to assist in the development of the 3D Dojo, this tool allows developers to validate assets before integration. It features studio-quality lighting, detailed model statistics, and an interactive hierarchy inspector similar to industry-standard 3D tools.",
+    features: [
+      "Drag & Drop Upload: Instant preview for local .glb files.",
+      "Inspector Panel: detailed stats (vertices, triangles, materials) and scene hierarchy tree.",
+      "Animation Viewer: List and playback controls for embedded animation clips.",
+      "Hover Inspection: Interactive mode to identify specific mesh names by hovering in 3D space.",
+      "Validation: Warnings for common issues like high poly counts or missing textures."
+    ]
   },
   {
     id: "oop-masterguide",
