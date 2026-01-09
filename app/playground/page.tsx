@@ -12,15 +12,59 @@ export default function PlaygroundPage() {
   const [gistId, setGistId] = useState("");
   const [fileName, setFileName] = useState("");
   const [activeGist, setActiveGist] = useState<{ id: string; file?: string; title: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleRun = (e: React.FormEvent) => {
+  const handleRun = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!gistId.trim()) return;
-    setActiveGist({
-      id: gistId,
-      file: fileName || undefined,
-      title: "Custom Gist Info"
-    });
+    
+    setLoading(true);
+    setError(null);
+    setActiveGist(null);
+
+    try {
+      // Fetch Gist metadata to validate
+      const response = await fetch(`https://api.github.com/gists/${gistId.trim()}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Gist not found. Please check the ID.");
+        }
+        throw new Error("Failed to fetch Gist data.");
+      }
+
+      const data = await response.json();
+      const files = Object.keys(data.files || {});
+
+      // If user specified a file, check if it exists and is HTML
+      if (fileName.trim()) {
+        const targetFile = files.find(f => f === fileName.trim());
+        if (!targetFile) {
+          throw new Error(`File "${fileName}" not found in this Gist.`);
+        }
+        if (!targetFile.toLowerCase().endsWith('.html')) {
+           throw new Error(`The file "${fileName}" is not an HTML file. This runner only supports HTML.`);
+        }
+      } else {
+        // Otherwise, look for any HTML file
+        const htmlFile = files.find(f => f.toLowerCase().endsWith('.html'));
+        if (!htmlFile) {
+           throw new Error("This Gist does not contain any .html files. To run an experiment, the Gist must at least have an index.html.");
+        }
+      }
+
+      setActiveGist({
+        id: gistId,
+        file: fileName || undefined,
+        title: data.description || "Custom Gist"
+      });
+
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +91,22 @@ export default function PlaygroundPage() {
              >
                 An interactive lab for experimenting with code. Run any GitHub Gist instantly or explore my curated collection of web experiments.
              </motion.p>
+             
+             <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="mt-6 flex justify-center"
+             >
+                <a 
+                  href="https://gist.github.com/Shadhujan" 
+                  target="_blank"
+                  className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-400 font-medium transition-colors border-b border-transparent hover:border-emerald-400 pb-0.5 text-sm"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+                  View all my Gists on GitHub
+                </a>
+             </motion.div>
         </section>
 
         {/* Gist Runner UI */}
@@ -61,6 +121,17 @@ export default function PlaygroundPage() {
                 <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
                    Gist Runner
+                   
+                   <div className="group relative ml-2">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 hover:text-emerald-400 cursor-help transition-colors"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                      
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-slate-800 border border-slate-700 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                         <div className="text-xs text-slate-300 leading-relaxed text-center">
+                            Enter the ID of any GitHub Gist containing an <span className="text-emerald-400 font-mono">index.html</span> file to run it instantly in the browser. Perfect for testing raw HTML/CSS/JS snippets.
+                         </div>
+                         <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-800" />
+                      </div>
+                   </div>
                 </h2>
                 <form onSubmit={handleRun} className="flex flex-col sm:flex-row gap-4">
                    <div className="flex-1 space-y-2">
@@ -70,7 +141,7 @@ export default function PlaygroundPage() {
                         placeholder="e.g. 91fed575..." 
                         value={gistId}
                         onChange={(e) => setGistId(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all placeholder:text-slate-600 font-mono text-slate-300"
+                        className={`w-full bg-slate-900 border ${error ? 'border-red-500/50 focus:border-red-500' : 'border-slate-700 focus:border-emerald-500'} rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all placeholder:text-slate-600 font-mono text-slate-300`}
                       />
                    </div>
                    <div className="flex-1 space-y-2">
@@ -86,16 +157,32 @@ export default function PlaygroundPage() {
                    <div className="space-y-2 pt-6 sm:pt-0 sm:self-end">
                       <button 
                          type="submit"
-                         className="w-full sm:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition-all hover:scale-[1.02] shadow-[0_0_15px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2"
+                         disabled={loading}
+                         className="w-full sm:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition-all hover:scale-[1.02] shadow-[0_0_15px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                         Run
+                         {loading ? (
+                            <div className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                         ) : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                         )}
+                         {loading ? 'Checking...' : 'Run'}
                       </button>
                    </div>
                 </form>
 
-                <div className="mt-4 text-xs text-slate-500 flex gap-4">
-                   <p>Supported: HTML, CSS, JS</p>
+                {error && (
+                   <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-sm text-red-200">
+                      <svg className="w-5 h-5 shrink-0 text-red-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <p>{error}</p>
+                   </div>
+                )}
+
+                <div className="mt-4 text-xs text-slate-500 flex flex-col sm:flex-row gap-4 sm:items-center">
+                   <p className="flex items-center gap-1.5">
+                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                     Required: Gist must contain an <span className="font-mono text-emerald-400 bg-emerald-500/10 px-1 rounded">.html</span> file
+                   </p>
+                   <p className="hidden sm:block text-slate-700">|</p>
                    <p>Powered by <a href="https://gisthost.github.io/" target="_blank" className="text-slate-400 hover:text-emerald-400 underline decoration-slate-700 underline-offset-2">gisthost</a></p>
                 </div>
              </div>
@@ -206,16 +293,8 @@ export default function PlaygroundPage() {
               {/* Fallback / Empty State filler if needed later */}
            </div>
 
-           <div className="mt-16 text-center">
-              <a 
-                href="https://gist.github.com/Shadhujan" 
-                target="_blank"
-                className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-400 font-medium transition-colors border-b border-transparent hover:border-emerald-400 pb-0.5"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
-                View all my Gists on GitHub
-              </a>
-           </div>
+
+           {/* Fallback / Empty State filler if needed later */}
         </section>
 
       </main>
