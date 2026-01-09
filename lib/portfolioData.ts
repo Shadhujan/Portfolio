@@ -166,6 +166,23 @@ export const projectsData = [
     liveUrl: "https://shadhujan.github.io/OOP-MasterGuide/",
   },
   {
+    id: "win95-sim",
+    name: "Windows 95 Simulation",
+    description: "Interactive Windows 95 desktop environment running entirely in the browser. Features functioning Minesweeper, Notepad, and classic UI elements.",
+    tech: ["Gist", "HTML", "CSS", "JavaScript"],
+    url: "https://gist.github.com/Shadhujan/91fed5757e310bda0ac3fc83dc34b7b2",
+    liveUrl: "https://gisthost.github.io/?91fed5757e310bda0ac3fc83dc34b7b2",
+    longDescription: "A nostalgic simulation of the Windows 95 operating system, complete with accurate UI components, window management, and classic applications. This project demonstrates the power of modern web technologies to recreate legacy software environments. It includes playable Minesweeper, a working text editor, and the iconic Start menu.",
+    features: [
+        "**The Desktop**: Authentic 'Windows Teal' background with draggable desktop icons.",
+        "**The Start Menu**: Fully functional classic Start Menu with sub-menus.",
+        "**Window System**: Drag, minimize, maximize, and close functionalities. Active window z-index handling with dynamic taskbar updates.",
+        "**Functional Apps**: Includes playable Minesweeper (with full logic), Notepad (text editor), Internet Explorer (mock browser), and My Computer.",
+        "**The Taskbar**: Authentic system tray time display and active window management."
+    ],
+    gistId: "91fed5757e310bda0ac3fc83dc34b7b2"
+  },
+  {
     id: "snake-game",
     name: "Multiplayer Snake Game",
     description:
@@ -226,6 +243,7 @@ export const projectsData = [
     tech: ["Python", "C++"],
     url: "https://github.com/Shadhujan/file-storage",
   },
+
 ];
 
 export const skillsData = {
