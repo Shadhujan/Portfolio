@@ -70,6 +70,9 @@ export default function Header() {
           <Link href={getLink("skills")} className="hover:text-emerald-400">
             Skills
           </Link>
+          <Link href="/playground" className="text-emerald-400 font-bold glow-sm hover:text-emerald-300">
+             Labs
+          </Link>
           <Link href="/blog" className="hover:text-emerald-400">
             Blog
           </Link>
@@ -125,6 +128,7 @@ export default function Header() {
                             { label: "About", href: "/about" },
                             { label: "Projects", href: "/projects" },
                             { label: "Skills", href: getLink("skills") },
+                            { label: "Labs", href: "/playground" },
                             { label: "Blog", href: "/blog" },
                             { label: "Contact", href: getLink("contact") },
                             { label: "CLI Mode", href: "/cli" },
