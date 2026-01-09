@@ -12,8 +12,12 @@ interface Project {
   url?: string;
   liveUrl?: string;
   longDescription?: string;
+
   features?: string[];
+  gistId?: string;
 }
+
+import GistDemo from "./GistDemo";
 
 interface ProjectModalProps {
   project: Project | null;
@@ -96,6 +100,9 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                       Overview
                     </h3>
+                    
+
+
                     <p className="text-slate-300 leading-relaxed text-base">
                       {project.longDescription || project.description}
                     </p>
@@ -124,6 +131,13 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                            </li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+
+                  {/* Gist Demo Embed */}
+                  {project.gistId && (
+                    <div className="mb-6 mt-8">
+                      <GistDemo gistId={project.gistId} title={project.name} />
                     </div>
                   )}
                 </div>
