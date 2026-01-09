@@ -407,3 +407,14 @@ export const skillIconMap: Record<string, string> = {
   "Pandas": "devicon-pandas-original",
   "NumPy": "devicon-numpy-original",
 };
+
+export const playgroundData = [
+  {
+    id: "win95-sim",
+    name: "Windows 95 Simulation",
+    description: "Full functioning Windows 95 desktop environment.",
+    gistId: "91fed5757e310bda0ac3fc83dc34b7b2",
+    tags: ["System", "Retro", "Game"]
+  },
+
+];
