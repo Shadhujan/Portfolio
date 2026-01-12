@@ -15,6 +15,8 @@ export default function Header() {
     return isHome ? `#${id}` : `/#${id}`;
   };
 
+  const isActive = (path: string) => pathname === path;
+
   const menuVariants = {
     closed: {
       opacity: 0,
@@ -61,22 +63,35 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden sm:flex gap-6 text-xs text-slate-300">
-          <Link href="/about" className="hover:text-emerald-400">
+          <Link 
+            href="/about" 
+            className={`transition-colors ${isActive('/about') ? 'text-emerald-400 font-medium drop-shadow-sm' : 'hover:text-emerald-400'}`}
+          >
             About
           </Link>
-          <Link href="/projects" className="hover:text-emerald-400">
+          <Link 
+            href="/projects" 
+            className={`transition-colors ${isActive('/projects') ? 'text-emerald-400 font-medium drop-shadow-sm' : 'hover:text-emerald-400'}`}
+          >
             Projects
           </Link>
-          <Link href={getLink("skills")} className="hover:text-emerald-400">
+          <Link 
+             href={getLink("skills")} 
+             className="hover:text-emerald-400"
+          >
             Skills
           </Link>
-          <Link href="/playground" className="text-emerald-400 font-bold glow-sm hover:text-emerald-300">
-             Labs
-          </Link>
-          <Link href="/blog" className="hover:text-emerald-400">
+
+          <Link 
+            href="/blog" 
+            className={`transition-colors ${isActive('/blog') ? 'text-emerald-400 font-medium drop-shadow-sm' : 'hover:text-emerald-400'}`}
+          >
             Blog
           </Link>
-          <Link href={getLink("contact")} className="hover:text-emerald-400">
+          <Link 
+             href={getLink("contact")} 
+             className="hover:text-emerald-400"
+          >
             Contact
           </Link>
         </nav>
@@ -85,9 +100,25 @@ export default function Header() {
         <div className="flex items-center gap-3">
             <Link
               href="/cli"
-              className="text-[11px] rounded-full border border-emerald-500/50 px-3 py-1 hover:bg-emerald-500 hover:text-slate-950 transition hidden sm:block"
+              className={`text-[11px] rounded-full border px-3 py-1 transition hidden sm:block ${
+                isActive('/cli') 
+                  ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-bold shadow-[0_0_10px_rgba(16,185,129,0.3)]' 
+                  : 'border-emerald-500/50 hover:bg-emerald-500 hover:text-slate-950'
+              }`}
             >
               CLI mode
+            </Link>
+
+            <Link
+              href="/playground"
+              className={`text-[11px] font-bold border rounded-full px-3 py-1 transition-all flex items-center gap-1.5 hidden sm:flex ${
+                 isActive('/playground')
+                   ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                   : 'bg-emerald-950/30 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full bg-emerald-500 ${isActive('/playground') ? 'animate-none shadow-[0_0_8px_#10b981]' : 'animate-pulse'}`} />
+              LABS
             </Link>
 
             {/* Hamburger Button */}
@@ -128,15 +159,19 @@ export default function Header() {
                             { label: "About", href: "/about" },
                             { label: "Projects", href: "/projects" },
                             { label: "Skills", href: getLink("skills") },
-                            { label: "Labs", href: "/playground" },
                             { label: "Blog", href: "/blog" },
                             { label: "Contact", href: getLink("contact") },
                             { label: "CLI Mode", href: "/cli" },
+                            { label: "Labs", href: "/playground" },
                         ].map((item) => (
                             <motion.div key={item.label} variants={itemVariants}>
                                 <Link 
                                     href={item.href}
-                                    className="text-lg font-medium text-slate-300 hover:text-emerald-400 block py-2 border-b border-slate-900/50 last:border-0"
+                                    className={`text-lg font-medium block py-2 border-b border-slate-900/50 last:border-0 ${
+                                      isActive(item.href) 
+                                        ? 'text-emerald-400 pl-2 border-emerald-500/20' 
+                                        : 'text-slate-300 hover:text-emerald-400'
+                                    }`}
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {item.label}

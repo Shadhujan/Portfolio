@@ -188,7 +188,7 @@ export default function HomePage() {
                    viewport={{ once: true }}
                    className="relative"
                 >
-                   <h2 className="text-5xl sm:text-7xl font-serif text-slate-100 font-bold leading-[0.9] mb-8 tracking-tighter">
+                   <h2 className="text-5xl sm:text-7xl text-slate-100 font-bold leading-[0.9] mb-8 tracking-tighter">
                       THE <br />
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
                         CREATIVE
@@ -200,7 +200,7 @@ export default function HomePage() {
                       <p className="lead border-l-4 border-emerald-500 pl-6 italic text-xl text-slate-300 mb-6">
                         "I believe that the best code isn't just written, it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
                       </p>
-                      <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:font-serif first-letter:text-slate-100">
+                      <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:text-slate-100">
                         Hi, I’m <span className="text-slate-200 font-semibold">Shadhujan Jeyachandran</span>, a Full Stack Developer based in Colombo, Sri Lanka. I currently work as an <span className="text-emerald-400">Intern Software Engineer at M Data Zone</span> (since April 2025).
                       </p>
                       <p className="mb-6">
