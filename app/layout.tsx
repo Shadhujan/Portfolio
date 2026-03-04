@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   },
   description:
     "Shadhujan Jeyachandran – Software Engineer and Full Stack Developer. Projects, experience, and skills.",
+  authors: [{ name: "Shadhujan Jeyachandran", url: "https://shadhujan.dev" }],
   applicationName: "Shadhujan Portfolio",
   generator: "Next.js",
   alternates: {
