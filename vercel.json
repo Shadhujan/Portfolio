@@ -1,9 +1,15 @@
 {
-    "redirects": [
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
         {
-            "source": "https://www.shadhujan.dev/:path*",
-            "destination": "https://shadhujan.dev/:path*",
-            "permanent": true
+          "type": "host",
+          "value": "www.shadhujan.dev"
         }
-    ]
+      ],
+      "destination": "https://shadhujan.dev/:path*",
+      "permanent": true
+    }
+  ]
 }
