@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { aboutData, projectsData, skillsData } from "@/lib/portfolioData";
 
@@ -52,9 +53,10 @@ interface CommandEntry {
   input: string;
   output: string[];
   isError?: boolean;
+  path?: string;
 }
 
-const PROMPT = "user@portfolio:~$";
+const PROMPT_BASE = "user@portfolio";
 
 const useBlink = (speed = 550) => {
   const [visible, setVisible] = useState(true);
@@ -71,14 +73,23 @@ export default function CLIPortfolioPage() {
   const [commandIndex, setCommandIndex] = useState<number | null>(null);
   const [rawCommands, setRawCommands] = useState<string[]>([]);
   const [sessionStart] = useState(() => new Date());
+  const [cwd, setCwd] = useState("~"); // Current working directory
   const endRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const cursorVisible = useBlink();
   const router = useRouter();
 
+  // Dynamic prompt based on CWD
+  const getPrompt = (path: string) => `user@portfolio:${path}$`;
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
+
+  // Auto-focus on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handleWrapperClick = () => {
     inputRef.current?.focus();
@@ -88,10 +99,16 @@ export default function CLIPortfolioPage() {
     const trimmed = raw.trim();
     if (!trimmed) return;
 
-    const [cmd, ...args] = trimmed.split(/\s+/);
+    let [cmd, ...args] = trimmed.split(/\s+/);
+
+    if (cmd === "cd..") {
+      cmd = "cd";
+      args = [".."];
+    }
 
     let output: string[] = [];
     let isError = false;
+    let newPath = cwd;
 
     switch (cmd) {
       case "help": {
@@ -99,14 +116,21 @@ export default function CLIPortfolioPage() {
           "Available commands:",
           "  help                       Show this help.",
           "  whoami                     Show basic information.",
-          "  cat about.txt              Show 'About Me' section.",
-          "  ls projects                List available projects.",
-          "  cat project <id>           Show details for a project.",
+          "  cd <dir>                   Change directory.",
+          "  pwd                        Print working directory.",
+          "  ls [dir]                   List contents.",
+          "  cat <file>                 Show file content.",
           "  analyze-skills --json      Show skills as JSON.",
           "  skills                     Show readable skills list.",
+          "  version                    Show version info.",
           "  clear                      Clear the screen.",
           "  exit                       Close CLI and go to normal portfolio.",
         ];
+        break;
+      }
+
+      case "pwd": {
+        output = [cwd];
         break;
       }
 
@@ -118,77 +142,163 @@ export default function CLIPortfolioPage() {
           aboutData.summary,
         ];
 
-        if (aboutData.github) {
-          output.push(`GitHub: ${aboutData.github}`);
-        }
-        if (aboutData.linkedin) {
-          output.push(`LinkedIn: ${aboutData.linkedin}`);
-        }
-        if (aboutData.medium) {
-          output.push(`Medium: ${aboutData.medium}`);
-        }
-        if (aboutData.website) {
-          output.push(`Website: ${aboutData.website}`);
-        }
-        if (aboutData.email) {
-          output.push(`Email: ${aboutData.email}`);
-        }
+        if (aboutData.github) output.push(`GitHub: ${aboutData.github}`);
+        if (aboutData.linkedin) output.push(`LinkedIn: ${aboutData.linkedin}`);
+        if (aboutData.medium) output.push(`Medium: ${aboutData.medium}`);
+        if (aboutData.instagram) output.push(`Instagram: ${aboutData.instagram}`);
 
+        if (aboutData.email) output.push(`Email: ${aboutData.email}`);
         break;
       }
 
-      case "cat": {
-        if (args[0] === "about.txt") {
-          output = [
-            `Name: ${aboutData.name}`,
-            `Role: ${aboutData.role}`,
-            `Location: ${aboutData.location}`,
-            "",
-            aboutData.summary,
-          ];
-        } else if (args[0] === "project") {
-          const projectId = args[1];
-          if (!projectId) {
-            isError = true;
-            output = ["cat: missing project id. Usage: cat project <id>"];
-          } else {
-            const proj = projectsData.find((p) => p.id === projectId);
-            if (!proj) {
-              isError = true;
-              output = [`cat: project '${projectId}' not found`];
-            } else {
-              output = [
-                `${proj.name} [${proj.id}]`,
-                `Tech: ${proj.tech.join(", ")}`,
-                "",
-                proj.description,
-                "",
-                proj.url ? `Repo: ${proj.url}` : "",
-                proj.liveUrl ? `Live: ${proj.liveUrl}` : "",
-              ].filter(Boolean);
-            }
+      case "cd": {
+        const target = args[0];
+        if (!target || target === "~") {
+          newPath = "~";
+          setCwd(newPath);
+        } else if (target === "..") {
+          if (cwd === "~/projects") {
+            newPath = "~";
+            setCwd(newPath);
           }
-        } else if (args[0]?.endsWith(".json")) {
-          output = [
-            "{",
-            '  "error": "File system is virtual only.",',
-            '  "hint": "Use \'ls projects\' or \'cat project <id>\' instead."',
-            "}",
-          ];
+           // if already at ~, stay at ~
+        } else if (target === "projects") {
+          if (cwd === "~") {
+            newPath = "~/projects";
+            setCwd(newPath);
+          } else if (cwd === "~/projects") {
+             output = [`cd: ${target}: No such file or directory`];
+             isError = true;
+          }
         } else {
+          output = [`cd: ${target}: No such file or directory`];
           isError = true;
-          output = [`cat: ${args[0] ?? "file"}: No such file or directory`];
         }
         break;
       }
 
       case "ls": {
-        if (args[0] === "projects") {
+        const target = args[0];
+        
+        let pathToList = cwd;
+        if (target) {
+           if (target === "~") pathToList = "~";
+           else if (target === "projects") pathToList = "~/projects";
+           else if (target === "..") pathToList = cwd === "~/projects" ? "~" : "~"; // simple logic
+           else {
+             output = [`ls: ${target}: No such file or directory`];
+             isError = true;
+             break;
+           }
+        }
+
+        if (pathToList === "~") {
+          output = ["./", "about.txt", "projects/", "skills.json", "README.md"];
+        } else if (pathToList === "~/projects") {
           output = projectsData.map(
             (p) => `${p.id.padEnd(16, " ")}  ${p.name}`
           );
+        }
+        break;
+      }
+
+      case "cat": {
+        const target = args[0];
+        if (!target) {
+            output = ["cat: usage: cat <file>"];
+            isError = true;
+            break;
+        }
+
+        if (target === "about.txt" || (cwd === "~" && target === "./about.txt")) {
+           if (cwd === "~") {
+              output = [
+                `Name: ${aboutData.name}`,
+                `Role: ${aboutData.role}`,
+                `Location: ${aboutData.location}`,
+                "",
+                aboutData.summary,
+              ];
+           } else {
+             output = [`cat: ${target}: No such file or directory`];
+             isError = true;
+           }
+        } else if (target === "skills.json") {
+           if (cwd === "~") {
+              output = [prettyJson(skillsData)];
+           } else {
+             output = [`cat: ${target}: No such file or directory`];
+             isError = true;
+           }
+        } else if (target === "README.md") {
+           if (cwd === "~") {
+              output = [
+                `# Portfolio CLI ${aboutData.version}`,
+                "Welcome to my interactive portfolio terminal.",
+                "Use standard commands like 'ls', 'cd', 'cat', and 'whoami' to navigate.",
+                "",
+                "Built with Next.js, React, and Tailwind CSS.",
+                "(c) 2025 Shadhujan Jeyachandran"
+              ];
+           } else {
+             output = [`cat: ${target}: No such file or directory`];
+             isError = true;
+           }
         } else {
-          output = ["./", "about.txt", "projects/", "skills.json", "README.md"];
+           // Check for project id
+           // If in ~, usage is cat project <id>? No, let's allow 'cat projects/id' or 'cat id' if in projects
+           // The previous code had `cat project <id>`. Let's support that legacy AND native file access
+           
+           if (target === "project") {
+               const projectId = args[1];
+               const proj = projectsData.find((p) => p.id === projectId);
+                if (!proj) {
+                  isError = true;
+                  output = [`cat: project '${projectId}' not found`];
+                } else {
+                  output = [
+                    `${proj.name} [${proj.id}]`,
+                    `Tech: ${proj.tech.join(", ")}`,
+                    "",
+                    proj.description,
+                    "",
+                    proj.url ? `Repo: ${proj.url}` : "",
+                    proj.liveUrl ? `Live: ${proj.liveUrl}` : "",
+                  ].filter(Boolean);
+                }
+           } else {
+               // Try to find project by ID if in projects dir
+               const projectId = target;
+               const proj = projectsData.find(p => p.id === projectId);
+               
+               if (proj && cwd === "~/projects") {
+                   output = [
+                    `${proj.name} [${proj.id}]`,
+                    `Tech: ${proj.tech.join(", ")}`,
+                    "",
+                    proj.description,
+                    "",
+                    proj.url ? `Repo: ${proj.url}` : "",
+                    proj.liveUrl ? `Live: ${proj.liveUrl}` : "",
+                  ].filter(Boolean);
+               } else if (proj && cwd === "~" && target.startsWith("projects/")) {
+                    // Not strictly supported by simple logic but good to have
+                    output = [`cat: ${target}: No such file or directory (try 'cd projects' first)`];
+                    isError = true;
+               } else {
+                   if (target.endsWith(".json")) {
+                      output = [
+                        "{",
+                        '  "error": "File system is virtual only.",',
+                        '  "hint": "Use \'ls projects\' or \'cat project <id>\' instead."',
+                        "}",
+                      ];
+                   } else {
+                      isError = true;
+                      output = [`cat: ${target}: No such file or directory`];
+                   }
+               }
+           }
         }
         break;
       }
@@ -212,6 +322,12 @@ export default function CLIPortfolioPage() {
           "",
           "Tools:",
           "  - " + skillsData.tools.join("\n  - "),
+          "",
+          "Machine Learning:",
+          "  - " + (skillsData.machineLearning?.join("\n  - ") || ""),
+          "",
+          "Architecture:",
+          "  - " + (skillsData.architecture?.join("\n  - ") || ""),
         ];
         break;
       }
@@ -226,6 +342,11 @@ export default function CLIPortfolioPage() {
             "Usage: analyze-skills --json or analyze-skills --json-output",
           ];
         }
+        break;
+      }
+
+      case "version": {
+        output = [aboutData.version];
         break;
       }
 
@@ -244,7 +365,6 @@ export default function CLIPortfolioPage() {
           "Switching to normal portfolio view...",
         ];
 
-        // redirect to landing page after small delay
         setTimeout(() => {
           router.push("/");
         }, 900);
@@ -266,6 +386,7 @@ export default function CLIPortfolioPage() {
       input: trimmed,
       output,
       isError,
+      path: cwd, // Store the path where command was ACTUALLY run
     };
 
     setHistory((prev) => [...prev, entry]);
@@ -318,7 +439,7 @@ export default function CLIPortfolioPage() {
         {/* Fake window header */}
         <div className="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-red-500" />
+            <Link href="/" title="Exit to Home" className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors cursor-pointer" />
             <span className="w-3 h-3 rounded-full bg-yellow-400" />
             <span className="w-3 h-3 rounded-full bg-green-500" />
           </div>
@@ -340,7 +461,7 @@ export default function CLIPortfolioPage() {
           {history.map((entry) => (
             <div key={entry.id} className="mb-2">
               <div className="flex gap-2">
-                <span className="text-emerald-400">{PROMPT}</span>
+                <span className="text-emerald-400">{getPrompt(entry.path || "~")}</span>
                 <span>{entry.input}</span>
               </div>
               <pre
@@ -357,10 +478,11 @@ export default function CLIPortfolioPage() {
 
           {/* Current input line */}
           <div className="flex gap-2 items-center">
-            <span className="text-emerald-400">{PROMPT}</span>
+            <span className="text-emerald-400">{getPrompt(cwd)}</span>
             <div className="flex-1 relative">
               <input
                 ref={inputRef}
+                autoFocus
                 className="w-full bg-transparent focus:outline-none caret-transparent text-slate-100"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -387,11 +509,11 @@ export default function CLIPortfolioPage() {
         <div className="border-t border-slate-800 px-4 py-1.5 bg-slate-950/90">
           <div className="text-[10px] text-slate-500 flex items-center justify-between font-mono">
             <span>
-              {PROMPT} interactive session · press{" "}
+              {getPrompt(cwd)} interactive session · press{" "}
               <strong className="font-bold">Ctrl+L</strong> or type{" "}
               <strong className="font-bold">clear</strong> to clean screen
             </span>
-            <span>v1.0.0</span>
+            <span>{aboutData.version}</span>
           </div>
         </div>
       </div>

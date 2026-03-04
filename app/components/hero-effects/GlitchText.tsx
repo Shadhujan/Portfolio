@@ -6,9 +6,10 @@ interface GlitchTextProps {
   text: string;
   isHovered: boolean;
   glitchColor?: string;
+  className?: string;
 }
 
-const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered, glitchColor = '#8b5cf6' }) => {
+const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered, glitchColor = '#8b5cf6', className = '' }) => {
   const letters = useMemo(() => text.split('').map((char, index) => {
     const randomX = Math.random() * 20 - 10;
     const randomY = Math.random() * 20 - 10;
@@ -38,7 +39,7 @@ const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered, glitchColor = 
 
   return (
     <div 
-        className="inline-block relative" 
+        className={`inline-block relative ${className}`} 
         style={{ 
             filter: isHovered ? 'url(#glitch-filter)' : 'none',
             '--glitch-color': glitchColor 

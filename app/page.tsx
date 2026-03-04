@@ -1,67 +1,76 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import ProjectModal from "./components/ProjectModal";
+
+// Define Project interface locally if not exported centrally yet
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  tech: string[];
+  url?: string;
+  liveUrl?: string;
+  longDescription?: string;
+  features?: string[];
+}
 import { motion } from "framer-motion";
 import {
   aboutData,
   projectsData,
   skillsData,
 } from "@/lib/portfolioData";
-import SkillBubbles from "./components/SkillBubbles";
-import AuroraBackground from "./components/hero-effects/AuroraBackground";
+import SkillOrbit from "./components/SkillOrbit";
+import InfiniteScrollSkills from "./components/InfiniteScrollSkills";
+import PlanetBackground from "./components/hero-effects/PlanetBackground";
 import FloatingCards from "./components/hero-effects/FloatingCards";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import BlogCarousel from "./components/BlogCarousel";
+import ContactSection from "./components/ContactSection";
 
 // Removed SkillMorphBlob component as it is replaced by SkillBubbles
 
 export default function HomePage() {
+  const [is3DView, setIs3DView] = useState(true);
+  const [visibleProjects, setVisibleProjects] = useState(4);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIs3DView(false);
+      } else {
+        setIs3DView(true);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
+      {/* ... keeping existing header and main content structure ... */}
+      
+      {/* Skipping to Skills section replacement, needs to match indentation context of the file */}
+      {/* Note: I cannot use '...' in replacement content accurately without full file context in one go. 
+         I will target the specific Skills section block instead.
+      */}
       {/* Header */}
-      <header className="border-b border-slate-800/80 backdrop-blur-sm bg-slate-950/60 sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <motion.div
-              initial={{ scale: 0, rotate: -15 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-              className="h-8 w-8 rounded-full bg-emerald-500/15 border border-emerald-400/60 flex items-center justify-center text-xs font-bold text-emerald-300"
-            >
-              {aboutData.name[0]}
-            </motion.div>
-            <div>
-              <p className="text-sm font-semibold">{aboutData.name}</p>
-              <p className="text-[11px] text-slate-400">{aboutData.role}</p>
-            </div>
-          </div>
-          <nav className="hidden sm:flex gap-6 text-xs text-slate-300">
-            <a href="#about" className="hover:text-emerald-400">
-              About
-            </a>
-            <a href="#projects" className="hover:text-emerald-400">
-              Projects
-            </a>
-            <a href="#skills" className="hover:text-emerald-400">
-              Skills
-            </a>
-            <a href="#contact" className="hover:text-emerald-400">
-              Contact
-            </a>
-          </nav>
-          <Link
-            href="/cli"
-            className="text-[11px] rounded-full border border-emerald-500/50 px-3 py-1 hover:bg-emerald-500 hover:text-slate-950 transition"
-          >
-            CLI mode
-          </Link>
-        </div>
-      </header>
+      {/* Header */}
+      <Header />
 
       {/* Main */}
       <main className="flex-1">
         {/* Hero */}
         <section className="relative border-b border-slate-900 bg-slate-950 overflow-hidden min-h-[600px] flex items-center">
-          {/* Aurora Background */}
-          <AuroraBackground />
+          {/* Interactive Planet Background */}
+          <PlanetBackground />
 
           <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12 grid gap-8 md:grid-cols-2 items-center relative z-10 w-full">
             <motion.div
@@ -88,12 +97,10 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
               >
-                Building <br />
+                Shadhujan <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                  digital experiences
+                  Jeyachandran
                 </span>
-                <br />
-                that matter.
               </motion.h1>
               
               <motion.p
@@ -112,13 +119,14 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45 }}
               >
-                <Link
-                  href="/cli"
+                <a
+                  href="/cv/Shadhujan Jeyachandran CV 2025_Feb2.pdf"
+                  download
                   className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-emerald-500 px-8 font-medium text-slate-950 transition-all duration-300 hover:bg-emerald-400 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                 >
-                  <span className="mr-2">Open CLI Terminal</span>
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </Link>
+                  <span className="mr-2">Download Resume</span>
+                  <span className="group-hover:translate-y-1 transition-transform text-lg">↓</span>
+                </a>
                 <a
                   href="#projects"
                   className="inline-flex h-12 items-center justify-center rounded-full border border-slate-700 bg-slate-900/50 px-8 font-medium text-slate-300 transition-all duration-300 hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-slate-800"
@@ -135,12 +143,118 @@ export default function HomePage() {
         </section>
 
         {/* About */}
-        <section id="about" className="border-b border-slate-900">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <h2 className="text-xl font-semibold mb-3">About</h2>
-            <p className="text-sm text-slate-300 max-w-2xl">
-              {aboutData.summary}
-            </p>
+        {/* About: Magazine Style */}
+        <section id="about" className="border-b border-slate-900 bg-slate-950 py-20 overflow-hidden">
+          <div className="max-w-6xl mx-auto px-4">
+             <div className="grid md:grid-cols-[1fr_1.5fr] gap-12 sm:gap-16 items-center">
+                
+                {/* Image Column */}
+                <motion.div 
+                   initial={{ opacity: 0, x: -30 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true }}
+                   className="relative group"
+                >
+                   {/* Decorative Frame */}
+                   <div className="absolute -inset-4 border-2 border-slate-800 rounded-lg translate-x-3 translate-y-3 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
+                   <div className="absolute -inset-4 border border-emerald-500/20 rounded-lg -translate-x-2 -translate-y-2 group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
+                   
+                   {/* Image Container */}
+                   <div className="relative aspect-[3/4] overflow-hidden rounded-lg grayscale hover:grayscale-0 transition-all duration-700 ease-in-out shadow-2xl">
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10 opactiy-60" />
+                      {/* Using standard img tag for simplicity with external/local assets, can specificy Next/Image if needed but path is raw */}
+                      <img 
+                        src="/profile/profile 4 to 3.jpg" 
+                        alt="Shadhujan Jeyachandran" 
+                        className="object-cover w-full h-full scale-105 group-hover:scale-100 transition-transform duration-700"
+                      />
+                      
+                      {/* Floating Badge */}
+                      <div className="absolute bottom-6 left-6 z-20">
+                         <span className="bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 uppercase tracking-widest mb-1 inline-block">
+                           Dev's Pick
+                         </span>
+                         <p className="text-white font-serif text-lg italic opacity-90">
+                           "Engineering with soul."
+                         </p>
+                      </div>
+                   </div>
+                </motion.div>
+
+                {/* Text Column */}
+                <motion.div
+                   initial={{ opacity: 0, y: 30 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   className="relative"
+                >
+                   <h2 className="text-5xl sm:text-7xl text-slate-100 font-bold leading-[0.9] mb-8 tracking-tighter">
+                      THE <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
+                        CREATIVE
+                      </span> <br />
+                      MINDSET.
+                   </h2>
+
+                   <div className="prose prose-invert prose-lg text-slate-400 relative">
+                      <p className="lead border-l-4 border-emerald-500 pl-6 italic text-xl text-slate-300 mb-6">
+                        "I believe that the best code isn't just written, it's crafted. It tells a story of logic, creativity, and the relentless pursuit of efficiency."
+                      </p>
+                      <p className="mb-6 first-letter:float-left first-letter:text-5xl first-letter:pr-3 first-letter:text-slate-100">
+                        Hi, I’m <span className="text-slate-200 font-semibold">Shadhujan Jeyachandran</span>, a Full Stack Developer based in Colombo, Sri Lanka. I currently work as an <span className="text-emerald-400">Intern Software Engineer at M Data Zone</span> (since April 2025).
+                      </p>
+                      <p className="mb-6">
+                        I graduated with a <strong className="text-slate-200">BSc. (Hons) in Computer Science</strong> from the University of Bedfordshire, UK (SLIIT) with <span className="text-emerald-400 font-medium">First Class Honours</span>. Prior to that, I completed my <strong className="text-slate-200">Higher Diploma in IT</strong> at SLIIT CITY UNI with a 3.30 GPA.
+                      </p>
+                      <p>
+                        My journey from automation to full-stack development has been driven by a singular purpose: to build systems that matter.
+                      </p>
+                      
+                      <div className="flex justify-end mt-8">
+                        <Link href="/about">
+                          <motion.svg 
+                            width="45" 
+                            height="24" 
+                            viewBox="0 0 80 24" 
+                            fill="none" 
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-emerald-500 cursor-pointer overflow-visible"
+                            animate={{ 
+                              x: [0, 10, 0], 
+                              filter: [
+                                "drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #10b981)", 
+                                "drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px #10b981)", 
+                                "drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #10b981)"
+                              ],
+                              transition: { 
+                                duration: 2, 
+                                repeat: Infinity, 
+                                ease: "easeInOut" 
+                              }
+                            }}
+                            whileHover={{ 
+                              scale: 1.3, 
+                              x: 0,
+                              filter: "drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #10b981)",
+                              transition: { 
+                                duration: 0.2 
+                              }
+                            }}
+                          >
+                            <path 
+                              d="M0 12H78M78 12L68 2M78 12L68 22" 
+                              stroke="currentColor" 
+                              strokeWidth="1.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                            />
+                          </motion.svg>
+                        </Link>
+                      </div>
+                   </div>
+                </motion.div>
+
+             </div>
           </div>
         </section>
 
@@ -153,11 +267,12 @@ export default function HomePage() {
                 JSON-driven cards · same data as CLI
               </p>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2">
-              {projectsData.map((project, idx) => (
+            <div className="grid gap-5 sm:grid-cols-2 mb-8">
+              {projectsData.slice(0, visibleProjects).map((project, idx) => (
                 <motion.div
                   key={project.id}
-                  className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 hover:border-emerald-400/70 transition relative overflow-hidden"
+                  onClick={() => setSelectedProject(project)}
+                  className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 hover:border-emerald-400/70 transition relative overflow-hidden cursor-pointer"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
@@ -183,139 +298,143 @@ export default function HomePage() {
                       </span>
                     ))}
                   </div>
-                  {project.url && (
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative mr-4"
-                    >
-                      View Code
-                    </a>
-                  )}
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-emerald-400 hover:text-emerald-300 underline relative"
-                    >
-                      Live Demo
-                    </a>
-                  )}
+                  <div className="flex items-center justify-between mt-auto">
+                    {project.url && (
+                      <span
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           window.open(project.url, '_blank');
+                        }}
+                        className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white transition-colors z-20 cursor-pointer"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        Code
+                      </span>
+                    )}
+                    {project.liveUrl && (
+                      <span
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           window.open(project.liveUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1.5 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors z-20 cursor-pointer ml-auto"
+                      >
+                        Live Demo
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </span>
+                    )}
+                  </div>
                 </motion.div>
               ))}
             </div>
+
+            {/* See More / Show Less Button */}
+            <div className="flex justify-center">
+               <button
+                  onClick={() => {
+                    if (visibleProjects >= projectsData.length) {
+                       setVisibleProjects(4); // Show Less
+                    } else {
+                       setVisibleProjects(projectsData.length); // Show All
+                    }
+                  }}
+                  className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full border border-slate-700 bg-slate-900 text-slate-300 text-sm font-medium transition-all hover:border-emerald-500/50 hover:text-emerald-400"
+               >
+                  {visibleProjects >= projectsData.length ? "Show Less" : "See More Projects"}
+                  <span className={`transition-transform duration-300 ${visibleProjects >= projectsData.length ? "rotate-180" : ""}`}>
+                    {/* Simple Chevron Down SVG */}
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+               </button>
+            </div>
           </div>
         </section>
 
-        {/* Skills with bubbles */}
+        <ProjectModal 
+          project={selectedProject} 
+          isOpen={!!selectedProject} 
+          onClose={() => setSelectedProject(null)} 
+        />
+
+        {/* Skills with toggle */}
         <section id="skills" className="border-b border-slate-900">
           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
               <div>
                 <h2 className="text-xl font-semibold mb-3">Skill Ecosystem</h2>
-                <p className="text-sm text-slate-300 max-w-xl">
-                  A comprehensive view of my technical stack, centered around .NET
-                  and modern web technologies.
+                <p className="text-sm text-slate-300 max-w-xl leading-relaxed">
+                  A high-performance technical stack centered around .NET Microservices, 
+                  Blazor, and Cloud Native solutions.
                 </p>
               </div>
-              <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em]">
-                Interactive Cloud
-              </p>
+              <div className="flex flex-col items-end gap-3">
+                 <div className="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                    <button
+                      onClick={() => setIs3DView(true)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        is3DView 
+                          ? "bg-slate-700 text-emerald-400 shadow-sm" 
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      3D Orbit
+                    </button>
+                    <button
+                      onClick={() => setIs3DView(false)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        !is3DView 
+                          ? "bg-slate-700 text-emerald-400 shadow-sm" 
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      Infinite Stream
+                    </button>
+                 </div>
+                {is3DView && (
+                  <p className="text-[10px] text-emerald-500/80">
+                    Drag to rotate · Hover to explore
+                  </p>
+                )}
+              </div>
             </div>
 
-            <SkillBubbles
-              skills={Array.from(
-                new Set([
-                  ...skillsData.languages,
-                  ...skillsData.backend,
-                  ...skillsData.frontend,
-                  ...skillsData.databases,
-                  ...skillsData.devops,
-                  ...skillsData.tools,
-                ])
-              )}
-            />
+            <div className="min-h-[500px] flex items-center justify-center">
+               {is3DView ? (
+                  <SkillOrbit
+                    skills={Array.from(
+                      new Set([
+                        ...skillsData.languages,
+                        ...skillsData.backend,
+                        ...skillsData.frontend,
+                        ...skillsData.databases,
+                        ...skillsData.devops,
+                        ...skillsData.tools,
+                      ])
+                    )}
+                  />
+               ) : (
+                  <InfiniteScrollSkills skillsData={skillsData} />
+               )}
+            </div>
           </div>
+        </section>
+
+        {/* Blog Carousel */}
+        <section id="blog" className="border-b border-slate-900">
+           <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
+             <BlogCarousel />
+           </div>
         </section>
 
         {/* Contact */}
-        <section id="contact">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12">
-            <h2 className="text-xl font-semibold mb-3">Contact</h2>
-            <p className="text-sm text-slate-300 mb-2">
-              I&apos;m open for interesting .NET / full-stack roles and
-              freelance projects.
-            </p>
-            <div className="flex flex-wrap gap-3 text-sm">
-              {aboutData.email && (
-                <a
-                  href={`mailto:${aboutData.email}`}
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Email me
-                </a>
-              )}
-              {aboutData.github && (
-                <a
-                  href={aboutData.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  GitHub
-                </a>
-              )}
-              {aboutData.linkedin && (
-                <a
-                  href={aboutData.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  LinkedIn
-                </a>
-              )}
-              {aboutData.medium && (
-                <a
-                  href={aboutData.medium}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Medium
-                </a>
-              )}
-              {aboutData.website && (
-                <a
-                  href={aboutData.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-slate-700 px-4 py-2 hover:border-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Website
-                </a>
-              )}
-            </div>
-          </div>
-        </section>
+        <ContactSection />
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900">
-        <div className="max-w-5xl mx-auto px-4 py-4 text-[11px] text-slate-500 flex items-center justify-between">
-          <span>
-            © {new Date().getFullYear()} {aboutData.name}. All rights reserved.
-          </span>
-          <Link
-            href="/cli"
-            className="underline hover:text-emerald-300 text-slate-400"
-          >
-            Open CLI version
-          </Link>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

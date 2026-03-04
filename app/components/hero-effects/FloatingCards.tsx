@@ -5,8 +5,8 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 
 const FloatingCards = () => {
   const [cards, setCards] = useState([
-    { id: "code", title: "Code", color: "from-emerald-500 to-teal-500", icon: "💻" },
     { id: "design", title: "Design", color: "from-violet-500 to-purple-500", icon: "🎨" },
+    { id: "code", title: "Code", color: "from-emerald-500 to-teal-500", icon: "💻" },
     { id: "deploy", title: "Deploy", color: "from-blue-500 to-cyan-500", icon: "🚀" },
   ]);
 
