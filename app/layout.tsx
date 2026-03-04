@@ -42,6 +42,24 @@ export default function RootLayout({
         <AnimatedFavicon />
         {children}
 
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Shadhujan",
+              url: "https://shadhujan.dev",
+              jobTitle: "Software Engineer",
+              sameAs: [
+                "https://github.com/shadhujan",
+                "https://linkedin.com/in/shadhujan"
+              ]
+            })
+          }}
+        />
+
         {/* Google tag (gtag.js) */}
         <Script 
           src="https://www.googletagmanager.com/gtag/js?id=G-F4JRH7V8EQ" 
