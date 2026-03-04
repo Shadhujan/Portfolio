@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://shadhujan.dev"),
   title: {
-    default: "Shadhujan | Software Engineer Portfolio",
-    template: "%s | Shadhujan",
+    default: "Shadhujan Jeyachandran | Software Engineer Portfolio",
+    template: "%s | Shadhujan Jeyachandran",
   },
   description:
-    "Shadhujan Jeyachandran – Software Engineer and Full Stack Developer. Projects, experience, and skills.",
+    "Portfolio of Shadhujan Jeyachandran, Software Engineer and Full Stack Developer. Projects, experience, and skills.",
   authors: [{ name: "Shadhujan Jeyachandran", url: "https://shadhujan.dev" }],
   creator: "Shadhujan Jeyachandran",
   publisher: "Shadhujan",
@@ -126,6 +126,7 @@ export default function RootLayout({
                 "https://lk.linkedin.com/in/shadhujan",
                 "https://github.com/Shadhujan",
                 "https://shadhujan.medium.com/",
+                "https://x.com/sivakarthisadhu",
                 "https://www.youtube.com/@JeyaShad"
               ]
             })

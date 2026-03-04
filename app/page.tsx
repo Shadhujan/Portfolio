@@ -103,14 +103,22 @@ export default function HomePage() {
                 </span>
               </motion.h1>
               
+              <motion.h2
+                className="text-xl sm:text-2xl text-emerald-400 font-medium mb-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.30 }}
+              >
+                Software Engineer &amp; Full Stack Developer
+              </motion.h2>
+              
               <motion.p
                 className="text-base sm:text-lg text-slate-400 mb-6 max-w-lg leading-relaxed"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
               >
-                I&apos;m a Full Stack Developer specializing in .NET and modern web technologies. 
-                I craft clean, performant, and interactive applications.
+                Specializing in .NET and modern web technologies. I craft clean, performant, and interactive applications.
               </motion.p>
               
               <motion.div
