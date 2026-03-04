@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shadhujan | Portfolio",
-  description: "Software Engineer & Full Stack Developer",
+  title: "Shadhujan | Software Engineer Portfolio",
+  description:
+    "Shadhujan – Software Engineer and Full Stack Developer. View projects, experience, and technical skills.",
   verification: {
     google: "2sROd9WAH4Hf5VX08iAYctCKIow9ZGh5RAaUPi4YdGg",
   },
