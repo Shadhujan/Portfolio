@@ -19,13 +19,6 @@ interface Project {
   features?: string[];
 }
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Projects",
-  description: "Selected software engineering projects by Shadhujan.",
-};
-
 export default function ProjectsPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   // Optional: Filter state if we want to add categories later

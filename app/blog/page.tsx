@@ -6,13 +6,6 @@ import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 import { useMediumArticles } from "@/hooks/useMediumArticles";
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Thoughts, tutorials, and insights on .NET, React, and Software Engineering.",
-};
-
 export default function BlogPage() {
   const { articles, loading, error, extractImage } = useMediumArticles();
 
