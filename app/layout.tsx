@@ -96,8 +96,10 @@ export default function RootLayout({
         {children}
 
         {/* Structured Data for SEO */}
-        <script
+        <Script
+          id="schema-person"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -123,6 +125,21 @@ export default function RootLayout({
                 "https://www.youtube.com/@JeyaShad"
               ]
             })
+          }}
+        />
+
+        <Script
+          id="schema-website"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+             __html: JSON.stringify({
+               "@context": "https://schema.org",
+               "@type": "WebSite",
+               name: "Shadhujan Portfolio",
+               url: "https://shadhujan.dev",
+               inLanguage: "en",
+             }),
           }}
         />
 

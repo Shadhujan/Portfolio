@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
-Disallow: /_next/
+
 Disallow: /api/
-Disallow: /gist-test
+Disallow: /gist-test/
+Disallow: /cli
 
 Sitemap: https://shadhujan.dev/sitemap.xml

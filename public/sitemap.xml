@@ -2,26 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
       <loc>https://shadhujan.dev/</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>1.0</priority>
    </url>
    <url>
       <loc>https://shadhujan.dev/about</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>0.8</priority>
    </url>
    <url>
       <loc>https://shadhujan.dev/projects</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>0.8</priority>
    </url>
    <url>
       <loc>https://shadhujan.dev/blog</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>0.8</priority>
    </url>
    <url>
       <loc>https://shadhujan.dev/playground</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>0.8</priority>
    </url>
    <url>
       <loc>https://shadhujan.dev/cli</loc>
+      <lastmod>2026-03-05</lastmod>
       <priority>0.7</priority>
    </url>
 </urlset>
