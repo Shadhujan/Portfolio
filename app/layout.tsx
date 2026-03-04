@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s | Shadhujan Jeyachandran",
   },
   description:
-    "Portfolio of Shadhujan Jeyachandran, Software Engineer and Full Stack Developer. Projects, experience, and skills.",
+    "Portfolio of Shadhujan Jeyachandran, Software Engineer and Full Stack Developer specializing in .NET, React, and Next.js, AI and his Projects, Experience, and Skills.",
   authors: [{ name: "Shadhujan Jeyachandran", url: "https://shadhujan.dev" }],
   creator: "Shadhujan Jeyachandran",
   publisher: "Shadhujan",
