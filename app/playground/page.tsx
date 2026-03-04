@@ -7,6 +7,13 @@ import Footer from "../components/Footer";
 import GistDemo from "../components/GistDemo";
 import { playgroundData } from "@/lib/portfolioData";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Playground",
+  description: "An interactive lab for experimenting with code and running GitHub Gists instantly.",
+};
+
 export default function PlaygroundPage() {
   // State for the custom runner
   const [gistId, setGistId] = useState("");

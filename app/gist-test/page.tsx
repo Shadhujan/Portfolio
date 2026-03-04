@@ -1,5 +1,13 @@
 import GistDemo from '../components/GistDemo';
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gist Test Sandbox",
+  description: "Testing environment for the Windows 95 Gist embedding.",
+  robots: { index: false, follow: false }, // Prevent indexing of test page
+};
+
 export default function GistTestPage() {
   const gistId = "91fed5757e310bda0ac3fc83dc34b7b2"; // Windows 95 Simulation Gist ID
 

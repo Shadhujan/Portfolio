@@ -7,6 +7,13 @@ import Footer from "../components/Footer";
 import { aboutData } from "@/lib/portfolioData";
 import GlitchText from "../components/hero-effects/GlitchText";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "A glimpse into my journey as a developer and the passions that drive me.",
+};
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col font-sans selection:bg-emerald-500/30">

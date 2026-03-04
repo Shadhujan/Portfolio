@@ -4,4 +4,24 @@
       <loc>https://shadhujan.dev/</loc>
       <priority>1.0</priority>
    </url>
+   <url>
+      <loc>https://shadhujan.dev/about</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://shadhujan.dev/projects</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://shadhujan.dev/blog</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://shadhujan.dev/playground</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://shadhujan.dev/cli</loc>
+      <priority>0.7</priority>
+   </url>
 </urlset>
