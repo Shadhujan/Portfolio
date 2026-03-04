@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description:
     "Shadhujan Jeyachandran – Software Engineer and Full Stack Developer. Projects, experience, and skills.",
   authors: [{ name: "Shadhujan Jeyachandran", url: "https://shadhujan.dev" }],
+  creator: "Shadhujan Jeyachandran",
+  publisher: "Shadhujan",
   applicationName: "Shadhujan Portfolio",
   generator: "Next.js",
   alternates: {
@@ -31,6 +33,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -48,7 +51,7 @@ export const metadata: Metadata = {
       "Software Engineer and Full Stack Developer. Projects, experience, and skills.",
     url: "https://shadhujan.dev",
     siteName: "Shadhujan Portfolio",
-    type: "website",
+    type: "profile",
     images: [
       {
         url: "/og.png",
