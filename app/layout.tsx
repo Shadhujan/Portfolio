@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AnimatedFavicon from "./components/AnimatedFavicon";
+import ChatBot from "./components/ChatBot";
 import Script from "next/script";
 
 const geistSans = Geist({
@@ -97,6 +98,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AnimatedFavicon />
+        <ChatBot />
         {children}
 
         {/* Structured Data for SEO */}
