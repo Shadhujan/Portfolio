@@ -96,81 +96,241 @@ body {
   animation-delay: 6s;
 }
 
-/* ── Chatbot Animations ─────────────────────── */
+/* ══════════════════════════════════════════════
+   Chatbot — Energized Data Core Animations
+   ══════════════════════════════════════════════ */
 
-@keyframes chatbot-orbit-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+/* ── Core icosahedron 3D rotation ── */
+@keyframes core-rotate {
+  0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  100% { transform: rotateX(360deg) rotateY(240deg) rotateZ(120deg); }
 }
 
-@keyframes chatbot-orbit-spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-
-  to {
-    transform: rotate(0deg);
-  }
+/* ── Orange inner glow pulse ── */
+@keyframes core-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50%      { opacity: 1;   transform: scale(1.1); }
 }
 
+/* ── Ring rotations ── */
+@keyframes ring-spin-1 {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes ring-spin-2 {
+  from { transform: rotate(120deg); }
+  to   { transform: rotate(480deg); }
+}
+@keyframes ring-spin-3 {
+  from { transform: rotate(240deg); }
+  to   { transform: rotate(600deg); }
+}
+
+/* ── Outer halo breathing ── */
+@keyframes halo-breathe {
+  0%, 100% { box-shadow: 0 0 15px 2px rgba(0,229,255,0.12), 0 0 40px 4px rgba(0,229,255,0.05); }
+  50%      { box-shadow: 0 0 25px 6px rgba(0,229,255,0.25), 0 0 60px 12px rgba(0,229,255,0.1); }
+}
+
+/* ── Circuit-trace dash crawl ── */
+@keyframes circuit-dash {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -80; }
+}
+
+/* ── Tooltip border glow ── */
+@keyframes tooltip-glow {
+  0%, 100% { border-color: rgba(0,229,255,0.15); box-shadow: 0 0 6px rgba(0,229,255,0.08); }
+  50%      { border-color: rgba(0,229,255,0.45); box-shadow: 0 0 14px rgba(0,229,255,0.2); }
+}
+
+/* ── Float bob ── */
 @keyframes chatbot-float-bob {
-
-  0%,
-  100% {
-    transform: translateY(-50%) translateX(0);
-  }
-
-  50% {
-    transform: translateY(-50%) translateX(-4px);
-  }
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50%      { transform: translateY(-50%) translateX(-3px); }
 }
 
+/* ── Blink cursor ── */
 @keyframes chatbot-blink-anim {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
 }
 
-.chatbot-orbit {
-  animation: chatbot-orbit-spin 8s linear infinite;
+/* ── Particle twinkle ── */
+@keyframes particle-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
 }
 
-.chatbot-orbit-reverse {
-  animation: chatbot-orbit-spin-reverse 12s linear infinite;
+
+/* ═══ DATA CORE CLASSES ═════════════════════════ */
+
+.data-core-container {
+  position: relative !important;
+  width: 64px !important;
+  height: 64px !important;
+  cursor: pointer;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.data-core-container:hover {
+  transform: scale(1.12);
 }
 
-.chatbot-float {
-  animation: chatbot-float-bob 3s ease-in-out infinite;
+/* ── Particle canvas ── */
+.data-core-particles {
+  position: absolute !important;
+  top: -20px !important;
+  left: -20px !important;
+  width: 104px !important;
+  height: 104px !important;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.chatbot-blink {
-  animation: chatbot-blink-anim 1s step-end infinite;
+/* ── Halo glow (no background, just box-shadow) ── */
+.data-core-halo {
+  position: absolute !important;
+  top: -4px !important;
+  left: -4px !important;
+  right: -4px !important;
+  bottom: -4px !important;
+  border-radius: 50%;
+  animation: halo-breathe 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.chatbot-scrollbar::-webkit-scrollbar {
-  width: 4px;
+/* ── Concentric rings (border only, no fill) ── */
+.data-core-ring {
+  position: absolute !important;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background: none !important;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible !important;
+}
+.data-core-ring--1 {
+  top: 2px !important;
+  left: 2px !important;
+  right: 2px !important;
+  bottom: 2px !important;
+  border-color: rgba(0,229,255,0.4);
+  animation: ring-spin-1 8s linear infinite;
+}
+.data-core-ring--2 {
+  top: -5px !important;
+  left: -5px !important;
+  right: -5px !important;
+  bottom: -5px !important;
+  border-color: rgba(13,148,136,0.3);
+  border-style: dashed;
+  animation: ring-spin-2 12s linear infinite;
+}
+.data-core-ring--3 {
+  top: -12px !important;
+  left: -12px !important;
+  right: -12px !important;
+  bottom: -12px !important;
+  border-color: rgba(0,229,255,0.15);
+  border-width: 1px;
+  animation: ring-spin-3 18s linear infinite;
 }
 
-.chatbot-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+/* ── Circuit SVG overlay on rings ── */
+.data-core-circuit {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  overflow: visible;
+}
+.data-core-circuit circle,
+.data-core-circuit path {
+  stroke: rgba(0,229,255,0.35);
+  stroke-width: 0.8;
+  fill: none;
+  stroke-dasharray: 3 6;
+  animation: circuit-dash 5s linear infinite;
 }
 
-.chatbot-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.2);
-  border-radius: 2px;
+/* ── Inner glow (behind glass) ── */
+.data-core-inner-glow {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,0.5) 0%, rgba(255,140,0,0.2) 45%, transparent 75%);
+  animation: core-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
 }
 
-.chatbot-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.4);
+/* ── Frosted glass sphere ── */
+.data-core-glass {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  right: 8px !important;
+  bottom: 8px !important;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    rgba(0,229,255,0.08) 0%,
+    rgba(13,148,136,0.06) 40%,
+    rgba(6,30,40,0.35) 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(0,229,255,0.15);
+  overflow: hidden;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 4;
 }
+
+/* ── Icosahedron SVG ── */
+.data-core-icosa {
+  width: 30px !important;
+  height: 30px !important;
+  animation: core-rotate 20s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(251,191,36,0.6));
+  transform-style: preserve-3d;
+  z-index: 5;
+}
+
+/* ── Floating tooltip ── */
+.data-core-tooltip {
+  position: absolute !important;
+  right: calc(100% + 16px) !important;
+  top: 50% !important;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  background: rgba(6,20,30,0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #5eead4;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,229,255,0.2);
+  animation: tooltip-glow 3s ease-in-out infinite, chatbot-float-bob 3s ease-in-out infinite;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+/* ── Retained ── */
+.chatbot-float { animation: chatbot-float-bob 3s ease-in-out infinite; }
+.chatbot-blink { animation: chatbot-blink-anim 1s step-end infinite; }
+
+/* ── Scrollbar ── */
+.chatbot-scrollbar::-webkit-scrollbar { width: 4px; }
+.chatbot-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.chatbot-scrollbar::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.2); border-radius: 2px; }
+.chatbot-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.4); }

@@ -154,9 +154,103 @@ export default function ChatBot() {
     });
   };
 
+  // ── Particle canvas ──
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animFrameRef = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || isOpen) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const DPR = window.devicePixelRatio || 1;
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * DPR;
+      canvas.height = rect.height * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    };
+    resize();
+
+    interface Particle {
+      x: number; y: number; r: number;
+      vx: number; vy: number;
+      alpha: number; phase: number;
+      color: string;
+      type: "dot" | "sparkle";
+    }
+
+    const W = () => canvas.getBoundingClientRect().width;
+    const H = () => canvas.getBoundingClientRect().height;
+
+    const particles: Particle[] = Array.from({ length: 32 }, () => {
+      const colors = [
+        "rgba(0,229,255,", "rgba(94,234,212,",
+        "rgba(255,255,255,", "rgba(251,191,36,"
+      ];
+      return {
+        x: Math.random() * 104, y: Math.random() * 104,
+        r: Math.random() * 1.8 + 0.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random(), phase: Math.random() * Math.PI * 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        type: Math.random() > 0.7 ? "sparkle" : "dot",
+      };
+    });
+
+    const drawSparkle = (cx: number, cy: number, size: number, alpha: number, color: string) => {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color + "1)";
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const angle = (Math.PI / 4) * i;
+        ctx.moveTo(cx + Math.cos(angle) * size * 0.3, cy + Math.sin(angle) * size * 0.3);
+        ctx.lineTo(cx + Math.cos(angle) * size, cy + Math.sin(angle) * size);
+      }
+      ctx.stroke();
+      ctx.restore();
+    };
+
+    let time = 0;
+    const loop = () => {
+      time += 0.016;
+      const w = W(), h = H();
+      ctx.clearRect(0, 0, w, h);
+
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        const flicker = 0.4 + 0.6 * Math.sin(time * 2 + p.phase);
+        const a = flicker * 0.8;
+
+        if (p.type === "sparkle") {
+          drawSparkle(p.x, p.y, p.r * 4, a, p.color);
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + a + ")";
+          ctx.fill();
+        }
+      }
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+    animFrameRef.current = requestAnimationFrame(loop);
+
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [isOpen]);
+
   return (
     <>
-      {/* Floating Action Button — elegant orbiting ring design */}
+      {/* ══ Energized Data Core FAB ══ */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
@@ -168,46 +262,107 @@ export default function ChatBot() {
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 z-[9998] group cursor-pointer"
             aria-label="Open chat assistant"
+            style={{ background: "none", border: "none" }}
           >
-            {/* Orbiting ring */}
-            <div className="absolute inset-[-6px] rounded-full border border-emerald-400/30 chatbot-orbit" />
-            <div className="absolute inset-[-12px] rounded-full border border-emerald-400/10 chatbot-orbit-reverse" />
+            <div className="data-core-container">
+              {/* Particle canvas */}
+              <canvas
+                ref={canvasRef}
+                className="data-core-particles"
+              />
 
-            {/* Tiny orbiting dot */}
-            <div className="absolute inset-[-6px] chatbot-orbit">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
-            </div>
+              {/* Halo */}
+              <div className="data-core-halo" />
 
-            {/* Main button */}
-            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-900/40 flex items-center justify-center transition-all duration-300 group-hover:shadow-emerald-500/30 group-hover:shadow-xl group-hover:scale-105">
-              {/* Chat icon — cute speech bubble */}
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                className="text-white drop-shadow-sm"
+              {/* Ring 3 (outermost) */}
+              <div className="data-core-ring data-core-ring--3" />
+
+              {/* Ring 2 (middle) + circuit overlay */}
+              <div className="data-core-ring data-core-ring--2">
+                <svg className="data-core-circuit" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="48" />
+                  <path d="M 10 50 Q 30 20 50 50 T 90 50" />
+                </svg>
+              </div>
+
+              {/* Ring 1 (innermost) + circuit overlay */}
+              <div className="data-core-ring data-core-ring--1">
+                <svg className="data-core-circuit" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="38" />
+                  <path d="M 5 40 Q 20 10 40 40 T 75 40" />
+                </svg>
+              </div>
+
+              {/* Inner glow (behind glass) */}
+              <div className="data-core-inner-glow" />
+
+              {/* Frosted glass sphere */}
+              <div className="data-core-glass">
+                {/* Icosahedron SVG */}
+                <svg
+                  className="data-core-icosa"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient id="icosa-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.9" />
+                      <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#ff8c00" stopOpacity="0.7" />
+                    </linearGradient>
+                    <linearGradient id="icosa-wire" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#5eead4" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.3" />
+                    </linearGradient>
+                    <filter id="icosa-glow">
+                      <feGaussianBlur stdDeviation="2" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  {/* Filled faces */}
+                  <g filter="url(#icosa-glow)">
+                    <polygon points="50,8 72,30 50,40" fill="url(#icosa-fill)" opacity="0.9" />
+                    <polygon points="50,8 28,30 50,40" fill="url(#icosa-fill)" opacity="0.75" />
+                    <polygon points="28,30 22,58 50,40" fill="url(#icosa-fill)" opacity="0.6" />
+                    <polygon points="72,30 78,58 50,40" fill="url(#icosa-fill)" opacity="0.65" />
+                    <polygon points="50,40 22,58 38,82" fill="url(#icosa-fill)" opacity="0.5" />
+                    <polygon points="50,40 78,58 62,82" fill="url(#icosa-fill)" opacity="0.55" />
+                    <polygon points="50,40 38,82 62,82" fill="url(#icosa-fill)" opacity="0.7" />
+                    <polygon points="22,58 38,82 50,92" fill="url(#icosa-fill)" opacity="0.4" />
+                    <polygon points="78,58 62,82 50,92" fill="url(#icosa-fill)" opacity="0.45" />
+                  </g>
+
+                  {/* Wireframe overlay */}
+                  <g stroke="url(#icosa-wire)" strokeWidth="0.8" fill="none">
+                    <polygon points="50,8 72,30 50,40" />
+                    <polygon points="50,8 28,30 50,40" />
+                    <polygon points="28,30 22,58 50,40" />
+                    <polygon points="72,30 78,58 50,40" />
+                    <polygon points="50,40 22,58 38,82" />
+                    <polygon points="50,40 78,58 62,82" />
+                    <polygon points="50,40 38,82 62,82" />
+                    <polygon points="22,58 38,82 50,92" />
+                    <polygon points="78,58 62,82 50,92" />
+                    <line x1="50" y1="8" x2="50" y2="92" strokeOpacity="0.15" />
+                    <line x1="22" y1="58" x2="78" y2="58" strokeOpacity="0.15" />
+                  </g>
+                </svg>
+              </div>
+
+              {/* Floating tooltip */}
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
+                className="data-core-tooltip"
               >
-                <path
-                  d="M12 2C6.48 2 2 5.58 2 10c0 2.24 1.12 4.27 2.93 5.72L4 20l4.35-2.17C9.5 18.27 10.72 18.5 12 18.5c5.52 0 10-3.58 10-8S17.52 2 12 2z"
-                  fill="currentColor"
-                />
-                {/* Three dots inside bubble */}
-                <circle cx="8" cy="10" r="1.2" fill="#065f46" />
-                <circle cx="12" cy="10" r="1.2" fill="#065f46" />
-                <circle cx="16" cy="10" r="1.2" fill="#065f46" />
-              </svg>
+                ✦ Ask me anything ✦
+              </motion.div>
             </div>
-
-            {/* Floating label */}
-            <motion.div
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1, duration: 0.4 }}
-              className="absolute right-[calc(100%+12px)] top-1/2 -translate-y-1/2 whitespace-nowrap bg-slate-900/90 backdrop-blur-sm text-emerald-300 text-xs font-medium px-3 py-1.5 rounded-full border border-emerald-500/20 shadow-lg pointer-events-none chatbot-float"
-            >
-              Ask me anything ✨
-            </motion.div>
           </motion.button>
         )}
       </AnimatePresence>
