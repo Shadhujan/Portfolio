@@ -353,15 +353,10 @@ export default function ChatBot() {
                 </svg>
               </div>
 
-              {/* Floating tooltip */}
-              <motion.div
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.2, duration: 0.5 }}
-                className="data-core-tooltip"
-              >
+              {/* Floating tooltip — visible on hover */}
+              <div className="data-core-tooltip">
                 ✦ Ask me anything ✦
-              </motion.div>
+              </div>
             </div>
           </motion.button>
         )}
