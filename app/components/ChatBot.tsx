@@ -26,7 +26,10 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [rateLimitMessages, setRateLimitMessages] = useState<number | null>(null);
+  const [rateLimitReset, setRateLimitReset] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -64,18 +67,31 @@ export default function ChatBot() {
       try {
         abortRef.current = new AbortController();
 
+        // Only send the last 5 messages to the API to save tokens
+        const recentMessages = updatedMessages
+          .filter((m) => m !== WELCOME_MESSAGE)
+          .slice(-5);
+
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: updatedMessages.filter(
-              (m) => m !== WELCOME_MESSAGE
-            ),
+            messages: recentMessages,
           }),
           signal: abortRef.current.signal,
         });
 
-        if (!res.ok) throw new Error("API request failed");
+        const limitStr = res.headers.get("X-RateLimit-Limit");
+        const remainingStr = res.headers.get("X-RateLimit-Remaining");
+        const resetStr = res.headers.get("X-RateLimit-Reset");
+        
+        if (remainingStr) setRateLimitMessages(parseInt(remainingStr, 10));
+        if (resetStr) setRateLimitReset(parseInt(resetStr, 10));
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => null);
+          throw new Error(errorData?.error || "API request failed");
+        }
 
         const reader = res.body?.getReader();
         const decoder = new TextDecoder();
@@ -106,7 +122,9 @@ export default function ChatBot() {
             updated[updated.length - 1] = {
               role: "assistant",
               content:
-                "Oops, something went wrong. Please try again! 🙏",
+                (err as Error).message === "Too many requests. Please try again later or reach out directly in LinkedIn or Instagram!" 
+                  ? (err as Error).message 
+                  : "Oops, something went wrong. Please try again! 🙏",
             };
             return updated;
           });
@@ -114,6 +132,10 @@ export default function ChatBot() {
       } finally {
         setIsStreaming(false);
         abortRef.current = null;
+        
+        // Add a 3-second cooldown to prevent spamming
+        setIsCoolingDown(true);
+        setTimeout(() => setIsCoolingDown(false), 3000);
       }
     },
     [input, isStreaming, messages]
@@ -152,6 +174,13 @@ export default function ChatBot() {
       if (part === "\n") return <br key={i} />;
       return <span key={i}>{part}</span>;
     });
+  };
+
+  const formatResetTime = (timestamp: number) => {
+    const diff = timestamp - Date.now();
+    if (diff <= 0) return "soon";
+    const minutes = Math.ceil(diff / 60000);
+    return `${minutes} min`;
   };
 
   // ── Removed Particle canvas: Plasma Motes ──
@@ -320,17 +349,22 @@ export default function ChatBot() {
                   ref={inputRef}
                   type="text"
                   placeholder={
-                    isStreaming ? "Waiting for response..." : "Ask about Shadhujan..."
+                    messages.length >= 20 
+                      ? "Message limit reached. Please email me!"
+                      : isStreaming || isCoolingDown
+                      ? "Waiting..."
+                      : "Ask about Shadhujan..."
                   }
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  disabled={isStreaming}
+                  disabled={isStreaming || isCoolingDown || messages.length >= 20}
+                  maxLength={150}
                   className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50"
                 />
                 <button
                   onClick={() => sendMessage()}
-                  disabled={!input.trim() || isStreaming}
+                  disabled={!input.trim() || isStreaming || isCoolingDown || messages.length >= 20}
                   className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/15 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
                   aria-label="Send message"
                 >
@@ -350,9 +384,17 @@ export default function ChatBot() {
                   </svg>
                 </button>
               </div>
-              <p className="text-[10px] text-slate-600 text-center mt-1.5">
-                Powered by Groq • Answers from portfolio data
-              </p>
+              <div className="flex justify-between items-center mt-1.5 px-1">
+                <p className="text-[10px] text-slate-600">
+                  Powered by Groq • Answers from portfolio data
+                </p>
+                {rateLimitMessages !== null && (
+                  <p className={`text-[10px] ${rateLimitMessages > 5 ? "text-emerald-500/70" : "text-amber-500/70"}`}>
+                    {rateLimitMessages} msgs left
+                    {rateLimitMessages === 0 && rateLimitReset && ` (resets in ${formatResetTime(rateLimitReset)})`}
+                  </p>
+                )}
+              </div>
             </div>
           </motion.div>
         )}

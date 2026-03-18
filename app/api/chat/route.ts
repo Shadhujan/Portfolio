@@ -1,4 +1,6 @@
 import Groq from "groq-sdk";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 import {
   aboutData,
   projectsData,
@@ -7,6 +9,13 @@ import {
 } from "@/lib/portfolioData";
 
 const MODEL = "llama-3.3-70b-versatile";
+
+// Create a new ratelimiter, that allows 20 requests per 1 hour
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(20, "1 h"),
+  analytics: true,
+});
 
 function buildSystemPrompt(): string {
   const about = `
@@ -87,6 +96,33 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Attempt to get IP from headers for rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    let rateLimitInfo = null;
+    
+    // Check rate limit
+    try {
+      const result = await ratelimit.limit(`ratelimit_${ip}`);
+      rateLimitInfo = result;
+      if (!result.success) {
+        return Response.json(
+          { error: "Too many requests. Please try again later or reach out directly!" },
+          { 
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": result.limit.toString(),
+              "X-RateLimit-Remaining": result.remaining.toString(),
+              "X-RateLimit-Reset": result.reset.toString(),
+            }
+          }
+        );
+      }
+    } catch (redisError) {
+      console.error("Redis Rate Limiting Error:", redisError);
+      // If Redis fails or is not configured properly, continue without rate limiting
+      // This ensures the bot still works if Upstash goes down or env vars are missing
+    }
+
     const { messages } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
@@ -110,7 +146,7 @@ export async function POST(request: Request) {
       model: MODEL,
       messages: chatMessages,
       temperature: 0.7,
-      max_completion_tokens: 1024,
+      max_completion_tokens: 1024, // Increased from 300 to allow longer responses
       stream: true,
     });
 
@@ -131,14 +167,29 @@ export async function POST(request: Request) {
       },
     });
 
-    return new Response(readableStream, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-      },
-    });
-  } catch (error) {
+    const headers: Record<string, string> = {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+    };
+
+    if (rateLimitInfo) {
+      headers["X-RateLimit-Limit"] = rateLimitInfo.limit.toString();
+      headers["X-RateLimit-Remaining"] = rateLimitInfo.remaining.toString();
+      headers["X-RateLimit-Reset"] = rateLimitInfo.reset.toString();
+    }
+
+    return new Response(readableStream, { headers });
+  } catch (error: any) {
     console.error("Chat API error:", error);
+    
+    // Optional: Return a specific error message if it's our rate limit message
+    if (error?.status === 429) {
+      return Response.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     return Response.json(
       { error: "Failed to process chat request" },
       { status: 500 }
