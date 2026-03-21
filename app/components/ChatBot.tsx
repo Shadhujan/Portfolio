@@ -110,7 +110,7 @@ export default function ChatBot() {
   const sendMessage = useCallback(
     async (text?: string) => {
       const messageText = text || input.trim();
-      if (!messageText || isStreaming || isQuotaExhausted) return;
+      if (!messageText || isStreaming || isCoolingDown || isQuotaExhausted) return;
 
       setHasInteracted(true);
       const userMessage: Message = { role: "user", content: messageText };
@@ -198,13 +198,13 @@ export default function ChatBot() {
         // Re-focus input after message completes
         setTimeout(() => inputRef.current?.focus(), 50);
 
-        // Add a 3-second cooldown to prevent spamming
+        // Add a 2-second cooldown to prevent spamming
         setIsCoolingDown(true);
         setTimeout(() => {
           setIsCoolingDown(false);
           // Re-focus after cooldown ends
           inputRef.current?.focus();
-        }, 3000);
+        }, 2000);
       }
     },
     [input, isStreaming, isQuotaExhausted, messages]
@@ -487,14 +487,14 @@ export default function ChatBot() {
                       ref={inputRef}
                       type="text"
                       placeholder={
-                        isStreaming || isCoolingDown
+                        isStreaming
                           ? "Waiting..."
                           : "Ask about Shadhujan..."
                       }
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      disabled={isStreaming || isCoolingDown}
+                      disabled={isStreaming}
                       maxLength={MAX_CHARS}
                       className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50"
                     />
