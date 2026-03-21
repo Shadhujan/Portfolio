@@ -11,7 +11,7 @@ interface Message {
 const WELCOME_MESSAGE: Message = {
   role: "assistant",
   content:
-    "Hey there! 👋 I'm Shad's portfolio assistant. Ask me anything about his projects, skills, experience, or education — I'm happy to help!",
+    "Hey there! 👋 I'm Shad's portfolio assistant. Ask me anything about his projects, skills, experience, or education. I'm happy to help!",
 };
 
 const SUGGESTED_QUESTIONS = [
@@ -343,18 +343,23 @@ export default function ChatBot() {
                   </div>
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-slate-950 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-100">
+                <div className="flex flex-col justify-center">
+                  <p className="text-sm font-semibold text-slate-100 leading-tight">
                     Shad&apos;s Assistant
                   </p>
-                  <p className="text-[10px] text-emerald-400/80">
-                    {isStreaming ? "Typing..." : "Online"}
-                  </p>
-                  {quotaBadgeText && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-[10px] text-emerald-400/80 flex items-center gap-1.5">
+                      {isStreaming ? "Typing..." : "Online"}
+                    </p>
+                    
+                    <span className="text-[10px] px-1.5 py-[1px] rounded bg-slate-800/80 text-slate-400 border border-slate-700/50 whitespace-nowrap">
+                      20 questions every 1 hr · Max 150 chars
+                    </span>
+                    {/* {quotaBadgeText && (
                     <p className={`text-[9px] ${quotaBadgeColor} leading-tight`}>
                       {quotaBadgeText}
-                    </p>
-                  )}
+                    </p>)} */}
+                  </div>
                 </div>
               </div>
               <button
@@ -444,16 +449,28 @@ export default function ChatBot() {
                     </p>
                   )}
                   <p className="text-[11px] text-slate-500">
-                    Need to chat more?{" "}
+                    Need to chat more?
+                    <br></br>
+                    Message me on{" "}
                     <a
                       href="https://www.linkedin.com/in/shadhujan/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
                     >
-                      Message me on LinkedIn
+                      LinkedIn
                     </a>
-                    {" "}or{" "}
+                    {", "}
+                    <a
+                      href="https://www.instagram.com/jeya.shad38/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+                    >
+                      Instagram
+                    </a>
+                    {", or "}
+                    
                     <a
                       href="mailto:shadhujan@outlook.com"
                       className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
