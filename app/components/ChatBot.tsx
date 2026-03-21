@@ -21,6 +21,8 @@ const SUGGESTED_QUESTIONS = [
   "How can I contact him?",
 ];
 
+const MAX_CHARS = 150;
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
@@ -28,11 +30,15 @@ export default function ChatBot() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isCoolingDown, setIsCoolingDown] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [rateLimitMessages, setRateLimitMessages] = useState<number | null>(null);
+  const [rateLimitRemaining, setRateLimitRemaining] = useState<number | null>(null);
+  const [rateLimitLimit, setRateLimitLimit] = useState<number | null>(null);
   const [rateLimitReset, setRateLimitReset] = useState<number | null>(null);
+  const [countdownText, setCountdownText] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  const isQuotaExhausted = rateLimitRemaining !== null && rateLimitRemaining <= 0;
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -41,6 +47,25 @@ export default function ChatBot() {
     }
   }, [messages]);
 
+  // Fetch quota from Upstash on chat open
+  useEffect(() => {
+    if (!isOpen) return;
+    const fetchQuota = async () => {
+      try {
+        const res = await fetch("/api/chat");
+        if (res.ok) {
+          const data = await res.json();
+          setRateLimitRemaining(data.remaining);
+          setRateLimitLimit(data.limit);
+          setRateLimitReset(data.reset);
+        }
+      } catch {
+        // Silently fail — chat still works without quota display
+      }
+    };
+    fetchQuota();
+  }, [isOpen]);
+
   // Focus input when chat opens
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -48,10 +73,44 @@ export default function ChatBot() {
     }
   }, [isOpen]);
 
+  // Live countdown timer when quota is exhausted
+  useEffect(() => {
+    if (!isQuotaExhausted || !rateLimitReset) {
+      setCountdownText(null);
+      return;
+    }
+    const tick = () => {
+      const diff = rateLimitReset - Date.now();
+      if (diff <= 0) {
+        setCountdownText(null);
+        // Quota has reset — refetch
+        setRateLimitRemaining(null);
+        setRateLimitReset(null);
+        return;
+      }
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      setCountdownText(mins > 0 ? `${mins}m ${secs}s` : `${secs}s`);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [isQuotaExhausted, rateLimitReset]);
+
+  // Helper to update quota state from response headers
+  const updateQuotaFromHeaders = (res: Response) => {
+    const remainingStr = res.headers.get("X-RateLimit-Remaining");
+    const resetStr = res.headers.get("X-RateLimit-Reset");
+    const limitStr = res.headers.get("X-RateLimit-Limit");
+    if (remainingStr) setRateLimitRemaining(parseInt(remainingStr, 10));
+    if (resetStr) setRateLimitReset(parseInt(resetStr, 10));
+    if (limitStr) setRateLimitLimit(parseInt(limitStr, 10));
+  };
+
   const sendMessage = useCallback(
     async (text?: string) => {
       const messageText = text || input.trim();
-      if (!messageText || isStreaming) return;
+      if (!messageText || isStreaming || isQuotaExhausted) return;
 
       setHasInteracted(true);
       const userMessage: Message = { role: "user", content: messageText };
@@ -63,6 +122,9 @@ export default function ChatBot() {
       // Add empty assistant message for streaming
       const assistantMessage: Message = { role: "assistant", content: "" };
       setMessages([...updatedMessages, assistantMessage]);
+
+      // Track if this was a 429 for error handling
+      let wasRateLimited = false;
 
       try {
         abortRef.current = new AbortController();
@@ -81,16 +143,17 @@ export default function ChatBot() {
           signal: abortRef.current.signal,
         });
 
-        const limitStr = res.headers.get("X-RateLimit-Limit");
-        const remainingStr = res.headers.get("X-RateLimit-Remaining");
-        const resetStr = res.headers.get("X-RateLimit-Reset");
-        
-        if (remainingStr) setRateLimitMessages(parseInt(remainingStr, 10));
-        if (resetStr) setRateLimitReset(parseInt(resetStr, 10));
+        // Always read rate-limit headers — even on 429
+        updateQuotaFromHeaders(res);
 
         if (!res.ok) {
+          wasRateLimited = res.status === 429;
           const errorData = await res.json().catch(() => null);
-          throw new Error(errorData?.error || "API request failed");
+          throw new Error(
+            wasRateLimited
+              ? "You've used all your messages for now. Please try again later or reach out directly!"
+              : errorData?.error || "API request failed"
+          );
         }
 
         const reader = res.body?.getReader();
@@ -121,10 +184,9 @@ export default function ChatBot() {
             const updated = [...prev];
             updated[updated.length - 1] = {
               role: "assistant",
-              content:
-                (err as Error).message === "Too many requests. Please try again later or reach out directly in LinkedIn or Instagram!" 
-                  ? (err as Error).message 
-                  : "Oops, something went wrong. Please try again! 🙏",
+              content: wasRateLimited
+                ? (err as Error).message
+                : "Oops, something went wrong. Please try again! 🙏",
             };
             return updated;
           });
@@ -132,13 +194,20 @@ export default function ChatBot() {
       } finally {
         setIsStreaming(false);
         abortRef.current = null;
-        
+
+        // Re-focus input after message completes
+        setTimeout(() => inputRef.current?.focus(), 50);
+
         // Add a 3-second cooldown to prevent spamming
         setIsCoolingDown(true);
-        setTimeout(() => setIsCoolingDown(false), 3000);
+        setTimeout(() => {
+          setIsCoolingDown(false);
+          // Re-focus after cooldown ends
+          inputRef.current?.focus();
+        }, 3000);
       }
     },
-    [input, isStreaming, messages]
+    [input, isStreaming, isQuotaExhausted, messages]
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -176,12 +245,26 @@ export default function ChatBot() {
     });
   };
 
-  const formatResetTime = (timestamp: number) => {
-    const diff = timestamp - Date.now();
-    if (diff <= 0) return "soon";
-    const minutes = Math.ceil(diff / 60000);
-    return `${minutes} min`;
-  };
+  // Character counter color based on usage
+  const charCountColor = 
+    input.length >= 140 ? "text-red-400/80" :
+    input.length >= 120 ? "text-amber-400/70" :
+    "text-slate-600";
+
+  // Header quota badge text
+  const quotaBadgeText = (() => {
+    if (rateLimitRemaining === null || rateLimitLimit === null) return null;
+    if (isQuotaExhausted && countdownText) return `Resets in ${countdownText}`;
+    if (isQuotaExhausted) return "Limit reached";
+    return `${rateLimitRemaining}/${rateLimitLimit} questions left`;
+  })();
+
+  const quotaBadgeColor = (() => {
+    if (rateLimitRemaining === null) return "";
+    if (isQuotaExhausted) return "text-red-400/80";
+    if (rateLimitRemaining <= 5) return "text-amber-400/70";
+    return "text-emerald-400/60";
+  })();
 
   // ── Removed Particle canvas: Plasma Motes ──
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -267,6 +350,11 @@ export default function ChatBot() {
                   <p className="text-[10px] text-emerald-400/80">
                     {isStreaming ? "Typing..." : "Online"}
                   </p>
+                  {quotaBadgeText && (
+                    <p className={`text-[9px] ${quotaBadgeColor} leading-tight`}>
+                      {quotaBadgeText}
+                    </p>
+                  )}
                 </div>
               </div>
               <button
@@ -344,57 +432,95 @@ export default function ChatBot() {
 
             {/* Input */}
             <div className="px-3 py-3 border-t border-emerald-500/10 bg-slate-950/50">
-              <div className="flex items-center gap-2 bg-slate-800/60 rounded-xl px-3 py-1.5 border border-slate-700/50 focus-within:border-emerald-500/40 transition-colors">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder={
-                    messages.length >= 20 
-                      ? "Message limit reached. Please email me!"
-                      : isStreaming || isCoolingDown
-                      ? "Waiting..."
-                      : "Ask about Shadhujan..."
-                  }
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isStreaming || isCoolingDown || messages.length >= 20}
-                  maxLength={150}
-                  className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50"
-                />
-                <button
-                  onClick={() => sendMessage()}
-                  disabled={!input.trim() || isStreaming || isCoolingDown || messages.length >= 20}
-                  className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/15 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
-                  aria-label="Send message"
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex justify-between items-center mt-1.5 px-1">
-                <p className="text-[10px] text-slate-600">
-                  Powered by Groq • Answers from portfolio data
-                </p>
-                {rateLimitMessages !== null && (
-                  <p className={`text-[10px] ${rateLimitMessages > 5 ? "text-emerald-500/70" : "text-amber-500/70"}`}>
-                    {rateLimitMessages} msgs left
-                    {rateLimitMessages === 0 && rateLimitReset && ` (resets in ${formatResetTime(rateLimitReset)})`}
+              {isQuotaExhausted ? (
+                // Exhausted state: show helpful message + contact CTA
+                <div className="text-center py-2">
+                  <p className="text-[12px] text-slate-400 mb-1">
+                    You&apos;ve used all {rateLimitLimit ?? 20} messages this hour.
                   </p>
-                )}
-              </div>
+                  {countdownText && (
+                    <p className="text-[11px] text-amber-400/80 mb-2">
+                      ⏱ Resets in {countdownText}
+                    </p>
+                  )}
+                  <p className="text-[11px] text-slate-500">
+                    Need to chat more?{" "}
+                    <a
+                      href="https://www.linkedin.com/in/shadhujan/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+                    >
+                      Message me on LinkedIn
+                    </a>
+                    {" "}or{" "}
+                    <a
+                      href="mailto:shadhujan@outlook.com"
+                      className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+                    >
+                      send an email
+                    </a>
+                  </p>
+                </div>
+              ) : (
+                // Normal input state
+                <>
+                  <div className="flex items-center gap-2 bg-slate-800/60 rounded-xl px-3 py-1.5 border border-slate-700/50 focus-within:border-emerald-500/40 transition-colors">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      placeholder={
+                        isStreaming || isCoolingDown
+                          ? "Waiting..."
+                          : "Ask about Shadhujan..."
+                      }
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      disabled={isStreaming || isCoolingDown}
+                      maxLength={MAX_CHARS}
+                      className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50"
+                    />
+                    {/* Character counter */}
+                    {input.length > 0 && (
+                      <span className={`text-[10px] tabular-nums whitespace-nowrap transition-colors ${charCountColor}`}>
+                        {input.length}/{MAX_CHARS}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => sendMessage()}
+                      disabled={!input.trim() || isStreaming || isCoolingDown}
+                      className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/15 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
+                      aria-label="Send message"
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex justify-between items-center mt-1.5 px-1">
+                    <p className="text-[10px] text-slate-600">
+                      Powered by Groq • Answers from portfolio data
+                    </p>
+                    {rateLimitRemaining !== null && rateLimitRemaining > 0 && (
+                      <p className={`text-[10px] ${rateLimitRemaining > 5 ? "text-emerald-500/70" : "text-amber-500/70"}`}>
+                        {rateLimitRemaining} msgs left
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}

@@ -85,6 +85,32 @@ URL: https://shadhujan.dev
 Version: ${aboutData.version}`;
 }
 
+export async function GET(request: Request) {
+  try {
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { remaining, limit, reset } = await ratelimit.getRemaining(`ratelimit_${ip}`);
+
+    return Response.json(
+      { remaining, limit, reset },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Quota check error:", error);
+    // If Redis is down, return a generous fallback so the chat still works
+    return Response.json(
+      { remaining: 20, limit: 20, reset: Date.now() + 3600000 },
+      { status: 200 }
+    );
+  }
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.GROQ_API_KEY;
 
