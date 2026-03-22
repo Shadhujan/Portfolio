@@ -2,7 +2,7 @@
 
 import React, { useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Html, OrbitControls } from "@react-three/drei";
+import { Html, TrackballControls } from "@react-three/drei";
 import { skillIconMap } from "@/lib/portfolioData";
 import * as THREE from "three";
 
@@ -127,19 +127,19 @@ const RotatingGroup = ({ skills }: { skills: string[] }) => {
 
 const SkillOrbit = ({ skills }: SkillOrbitProps) => {
   return (
-    <div className="w-full h-[500px] relative cursor-move select-none">
-      <Canvas camera={{ position: [0, 0, 14], fov: 50 }}>
+    <div className="w-full h-[500px] relative cursor-move select-none overflow-visible flex items-center justify-center">
+      <Canvas camera={{ position: [0, 0, 14], fov: 56 }}>
         <fog attach="fog" args={["#020617", 10, 25]} />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         
         <RotatingGroup skills={skills} />
         
-        <OrbitControls 
-          enableZoom={false} 
-          enablePan={false} 
-          autoRotate={false}
-          rotateSpeed={0.5}
+        <TrackballControls 
+          noZoom={true} 
+          noPan={true} 
+          rotateSpeed={2.0}
+          dynamicDampingFactor={0.1}
         />
       </Canvas>
     </div>
