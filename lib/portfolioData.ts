@@ -45,7 +45,7 @@ export const aboutData = {
   instagram: "https://www.instagram.com/jeya.shad38",
   featuredProject: "https://cis-bunona-game.netlify.app/",
   email: "jeya38shadhujan@gmail.com",
-  version: "v1.25.1218",
+  version: "v1.26.0405",
   hobbies: [
     {
       icon: "gaming", 
@@ -61,6 +61,11 @@ export const aboutData = {
       icon: "music",
       title: "Music",
       description: "Lo-fi beats for coding and high-energy tracks for workouts."
+    },
+    {
+      icon: "chess",
+      title: "Chess",
+      description: "Mastering tactical patterns and enjoying the timeless challenge of strategic gameplay."
     },
      {
       icon: "travel",
