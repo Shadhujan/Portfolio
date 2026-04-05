@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, TrackballControls } from "@react-three/drei";
 import { skillIconMap } from "@/lib/portfolioData";
@@ -41,9 +42,11 @@ const SkillNode = ({
             `}
           >
             {isCustomImage ? (
-              <img 
+              <Image 
                 src={iconClass} 
-                alt={label} 
+                alt={label}
+                width={32}
+                height={32}
                 className={`w-8 h-8 object-contain ${label === "OpenAI" || label === "Render" ? "invert" : ""}`} 
               />
             ) : isGeneric ? (

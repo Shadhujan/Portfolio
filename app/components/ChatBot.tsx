@@ -345,7 +345,10 @@ export default function ChatBot() {
                 </div>
                 <div className="flex flex-col justify-center">
                   <p className="text-sm font-semibold text-slate-100 leading-tight">
-                    Shad&apos;s Assistant
+                    <b>N E R O</b> 
+                    <p className="text-[10px] font-semibold text-slate-200/80 leading-tight"> 
+                      (Shad&apos;s Assistant) 
+                    </p>
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <p className="text-[10px] text-emerald-400/80 flex items-center gap-1.5">
@@ -528,7 +531,7 @@ export default function ChatBot() {
                   </div>
                   <div className="flex justify-between items-center mt-1.5 px-1">
                     <p className="text-[10px] text-slate-600">
-                      Powered by Groq • Answers from portfolio data
+                      Powered by ShadX-Bot • Answers from portfolio data
                     </p>
                     {rateLimitRemaining !== null && rateLimitRemaining > 0 && (
                       <p className={`text-[10px] ${rateLimitRemaining > 5 ? "text-emerald-500/70" : "text-amber-500/70"}`}>
