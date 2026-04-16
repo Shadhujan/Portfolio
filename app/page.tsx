@@ -128,7 +128,7 @@ export default function HomePage() {
                 transition={{ delay: 0.45 }}
               >
                 <a
-                  href="/cv/Shadhujan Jeyachandran CV 2025_Feb2.pdf"
+                  href="/cv/Shadhujan_CV_2026_Apr.pdf"
                   download
                   className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-emerald-500 px-8 font-medium text-slate-950 transition-all duration-300 hover:bg-emerald-400 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                 >
