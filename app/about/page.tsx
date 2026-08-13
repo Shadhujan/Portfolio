@@ -34,7 +34,7 @@ export default function AboutPage() {
                transition={{ duration: 0.8, ease: "easeOut" }}
                className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-100 to-slate-600 mb-8"
              >
-               MY STORY
+               MY-STORY
              </motion.h1>
              <motion.p
                initial={{ opacity: 0 }}
